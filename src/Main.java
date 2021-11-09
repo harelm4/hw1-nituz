@@ -1,4 +1,13 @@
+import java.util.ArrayList;
+
 public class Main {
+    ArrayList<User> users = new ArrayList<User>();
+    ArrayList<Order> accounts = new ArrayList<Order>();
+    ArrayList<Product> products = new ArrayList<Product>();
+    Order lastOrder;
+    User userLoggedIn;
+
+
     public static void main(String[] args) {
         /**
          * todo:supported commends:
@@ -44,5 +53,37 @@ public class Main {
              	Password: Dana123
              ה-Premium Account הנ"ל יהיה מקושר עם עליית המערכת ל-Product בשם Bamba.
          **/
+
+
+
+        int inputValue=-1;
+        while (inputValue !=0){
+            System.out.println(
+                    "choose action:\n" +
+                            "1.Add user\n"+
+                            "2.Remove user\n"+
+                            "3.Login user\n "+
+                            "4.Logout user\n"+
+                            "5."
+            );
+
+            //if choose add user
+        }
+
+
+    }
+    public void addUser(String id,String password){
+        ShoppingCart shoppingCart=new ShoppingCart();
+
+        User user = new User(id,password,UserState.New,shoppingCart.account.customer);
+
+        users.add();
+    }
+    public void removeUser(String id){
+        for(User u:users){
+            if(u.login_id==id){
+
+            }
+        }
     }
 }
