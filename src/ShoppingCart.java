@@ -1,5 +1,10 @@
+import java.util.ArrayList;
 import java.util.Date;
 
 public class ShoppingCart {
-    public Date created;
+    private Date created;
+
+    private User user;
+    private Account account;
+    private ArrayList<LineItem> lineItems;
 }
