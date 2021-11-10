@@ -1,11 +1,14 @@
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Main {
     ArrayList<User> users = new ArrayList<User>();
-    ArrayList<Order> accounts = new ArrayList<Order>();
+    ArrayList<Order> orders = new ArrayList<Order>();
     ArrayList<Product> products = new ArrayList<Product>();
+    ArrayList allInstances = new ArrayList();
     Order lastOrder;
-    User userLoggedIn;
+    User userLoggedIn=null;
+    int nextOrderNumber=1;
 
 
     public static void main(String[] args) {
@@ -72,16 +75,87 @@ public class Main {
 
 
     }
-    public void addUser(String id,String password){
+    public User addUser(String id,String password,boolean isPremiumAccount){
         ShoppingCart shoppingCart=new ShoppingCart();
 
-        User user = new User(id,password,UserState.New,shoppingCart.account.customer);
+        Account account;
+        if(isPremiumAccount) account=new PremiumAccount();
+        else account=new Account();
 
-        users.add();
+        Customer customer=new Customer();
+
+        allInstances.add(shoppingCart);
+        allInstances.add(customer);
+        allInstances.add(account);
+        //shopping cart->account
+        shoppingCart.account=account;
+        //account->customer
+        account.customer=customer;
+        //customer->account
+        customer.account=account;
+        //account->shopping cart
+        account.shoppingCart=shoppingCart;
+        //creating a new user
+        User user = new User(id,password,UserState.New);
+        //user->customer
+        user.customer=customer;
+
+        allInstances.add(user);
+        users.add(user);
+        return user;
+    }
+    public Status loginUser(String id,String password){
+        if(userLoggedIn==null){
+            User u=findUser(id);
+            if (u!=null && users.contains(u) && u.getPassword()==password){
+                userLoggedIn=u;
+                return Status.success;
+            }
+        }
+        return Status.failure
+    }
+    public Status logOut(String id){
+        if(id== userLoggedIn.getLoginId()){
+            userLoggedIn=null;
+            return Status.success;
+        }
+        return Status.failure;
+    }
+    public int createNewOrder(String address){
+        Order order=new Order(nextOrderNumber, LocalDateTime.now(),address,OrderStatus.New);
+        allInstances.add(order);
+        orders.add(order);
+        userLoggedIn.getCustomer().account.addOrder(order);
+        nextOrderNumber+=1;
+        return nextOrderNumber-1;
+    }
+    public Status addProductToOrder(String orderID,String userId,String productName){
+
     }
     public void removeUser(String id){
+        //todo:to complete at the end
+        User user=findUser(id);
+        if(user!=null){
+            allInstances.remove(user);
+            allInstances.remove(user.getCustomer());
+            allInstances.remove(user.getCustomer().getAccont());
+            if(user.getCustomer().getAccont().getOrders().leangth != 0){
+                allInstances.removeAll(user.getCustomer().getAccont().getOrders());
+            }
+            if(user.getShoppingCart() != null){
+                allInstances.remove(user.getShoppingCart());
+                if(user.getShoppingCart.leangth != 0){
+                    allInstances.removeAll(user.getCustomer().getAccont().getOrders());
+                }
+            }
+
+        }
+    }
+
+    private User findUser(String id){
         for(User u:users){
-            if(u.login_id==id){
+            if(u.getLoginId()==id){
+                return u;
 
             }
         }
