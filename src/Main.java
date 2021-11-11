@@ -88,9 +88,9 @@ public class Main {
         allInstances.add(customer);
         allInstances.add(account);
         //shopping cart->account
-        shoppingCart.account=account;
+        shoppingCart.setAccount(account);
         //account->customer
-        account.customer=customer;
+        account.setCustomer(customer);
         //customer->account
         customer.account=account;
         //account->shopping cart
@@ -112,25 +112,31 @@ public class Main {
                 return Status.success;
             }
         }
-        return Status.failure
+        return Status.failure;
     }
     public Status logOut(String id){
-        if(id== userLoggedIn.getLoginId()){
+        if(id== userLoggedIn.getLogin_id()){
             userLoggedIn=null;
             return Status.success;
         }
         return Status.failure;
     }
     public int createNewOrder(String address){
-        Order order=new Order(nextOrderNumber, LocalDateTime.now(),address,OrderStatus.New);
+        if(userLoggedIn==null){
+            return -1;
+        }
+        Address addressObj=new Address(address);
+        allInstances.add(addressObj);
+        Order order=new Order(String.valueOf(nextOrderNumber), LocalDateTime.now(),addressObj,OrderStatus.New);
         allInstances.add(order);
         orders.add(order);
         userLoggedIn.getCustomer().account.addOrder(order);
         nextOrderNumber+=1;
         return nextOrderNumber-1;
     }
-    public Status addProductToOrder(String orderID,String userId,String productName){
 
+    public Status addProductToOrder(String orderID,String userId,String productName){
+        findOrder(orderID).;
     }
     public void removeUser(String id){
         //todo:to complete at the end
@@ -154,10 +160,20 @@ public class Main {
 
     private User findUser(String id){
         for(User u:users){
-            if(u.getLoginId()==id){
+            if(u.getLogin_id()==id){
                 return u;
 
             }
         }
+        return null;
+    }
+    private Order findOrder(String id){
+        for(Order o:orders){
+            if(o.getNumber()==id){
+                return o;
+
+            }
+        }
+        return null;
     }
 }
