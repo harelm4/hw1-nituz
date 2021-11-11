@@ -40,16 +40,23 @@ public class Product {
     }
 
 
-    public Product(String id, String name, Supplier supplier) {
+    public Product(String id, String name) {
         this.id = id;
         this.name = name;
         this.supplier = supplier;
-        supplier.addProduct(this);
+
     }
 
-    public void remove()
-    {
-        supplier.removeProduct(this);
-        supplier=null;
+    public Status addLineItem(LineItem li){
+        if (li==null)
+            return Status.failure;
+        if (lineItems.contains(li))
+            return Status.failure;
+        lineItems.add(li);
+        return Status.success;
+
+    }
+    public void delLineItem(LineItem li){
+        lineItems.remove(li);
     }
 }

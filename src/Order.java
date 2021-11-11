@@ -20,11 +20,17 @@ public class Order {
         this.ship_to = ship_to;
         this.status = status;
     }
-    public void addLineItem(LineItem li){
+    public Status addLineItem(LineItem li){
+        if (li==null)
+            return Status.failure;
+        if (lineItems.contains(li))
+            return Status.failure;
         lineItems.add(li);
+        return Status.success;
+
     }
     public void delLineItem(LineItem li){
-        lineItems.add(li);
+        lineItems.remove(li);
     }
 
     public String getNumber() {
@@ -98,4 +104,12 @@ public class Order {
     public void setPayments(List<Payment> payments) {
         this.payments = payments;
     }
+
+    public void addPayment(Payment p){
+        payments.add(p);
+    }
+    public void deletePayment(Payment p){
+        payments.remove(p);
+    }
+
 }

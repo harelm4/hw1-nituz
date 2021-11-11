@@ -39,4 +39,16 @@ public class ShoppingCart {
     public void setLineItems(ArrayList<LineItem> lineItems) {
         this.lineItems = lineItems;
     }
+    public Status addLineItem(LineItem li){
+        if (li==null)
+            return Status.failure;
+        if (lineItems.contains(li))
+            return Status.failure;
+        lineItems.add(li);
+        return Status.success;
+
+    }
+    public void delLineItem(LineItem li){
+        lineItems.remove(li);
+    }
 }

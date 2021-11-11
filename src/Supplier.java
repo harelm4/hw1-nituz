@@ -46,29 +46,19 @@ public class Supplier {
         products = prods;
     }
 
-    public boolean addProduct(Product p)
+    public Status addProduct(Product p)
     {
         if (p==null)
-            return false;
+            return Status.failure;
         if (products.contains(p))
-            return false;
-        if (p.getSupplier()!=this)
-            return false;
+            return Status.failure;
         products.add(p);
-        return true;
+        return Status.success;
     }
 
-    public void removeProduct(Product product) {
+    public void delProduct(Product product) {
         products.remove(product);
     }
 
-    public void remove()
-    {
-        int i;
-        int length = products.size();
-        while(products.isEmpty()==false)
-        {
-            products.get(0).remove();
-        }
-    }
+
 }
