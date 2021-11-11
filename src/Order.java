@@ -111,5 +111,15 @@ public class Order {
     public void deletePayment(Payment p){
         payments.remove(p);
     }
+    public float getSumOfPayments()
+    {
+        float sum=0;
+        for (Payment p:
+                payments) {
+            sum+=p.total;
+        }
+        return sum;
+    }
+
 
 }

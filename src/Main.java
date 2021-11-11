@@ -134,29 +134,50 @@ public class Main {
         nextOrderNumber+=1;
         return nextOrderNumber-1;
     }
+    //Add product to order *Order_ID* *Login_ID* *Product Name*
+
 
     public Status addProductToOrder(String orderID,String userId,String productName){
-        findOrder(orderID).;
-    }
-    public void removeUser(String id){
-        //todo:to complete at the end
-        User user=findUser(id);
-        if(user!=null){
-            allInstances.remove(user);
-            allInstances.remove(user.getCustomer());
-            allInstances.remove(user.getCustomer().getAccont());
-            if(user.getCustomer().getAccont().getOrders().leangth != 0){
-                allInstances.removeAll(user.getCustomer().getAccont().getOrders());
-            }
-            if(user.getShoppingCart() != null){
-                allInstances.remove(user.getShoppingCart());
-                if(user.getShoppingCart.leangth != 0){
-                    allInstances.removeAll(user.getCustomer().getAccont().getOrders());
-                }
-            }
 
-        }
+
+        findOrder(orderID).addLineItem(findProductByName(productName).);
     }
+
+    public Status DisplayOrder(){
+        if(userLoggedIn.getState()==UserState.Closed)
+            return Status.failure;
+        Order lastOrder=userLoggedIn.getCustomer().getAccount().getOrders().peek();
+        System.out.println(
+                "Order Number: "+ lastOrder.getNumber()
+                        +"Order Date:"+ lastOrder.getOrdered()
+                        +"Order Shipping Date:"+lastOrder.getShipped()
+                        +"Order Adress:"+lastOrder.getShip_to().getAdress()
+                        +"Order Status:"+lastOrder.getStatus().name()
+                        +"Order total Payment"+lastOrder.getSumOfPayments()
+        );
+        return Status.success;
+    }
+
+
+//    public void removeUser(String id){
+//        //todo:to complete at the end
+//        User user=findUser(id);
+//        if(user!=null){
+//            allInstances.remove(user);
+//            allInstances.remove(user.getCustomer());
+//            allInstances.remove(user.getCustomer().getAccont());
+//            if(user.getCustomer().getAccont().getOrders().leangth != 0){
+//                allInstances.removeAll(user.getCustomer().getAccont().getOrders());
+//            }
+//            if(user.getShoppingCart() != null){
+//                allInstances.remove(user.getShoppingCart());
+//                if(user.getShoppingCart.leangth != 0){
+//                    allInstances.removeAll(user.getCustomer().getAccont().getOrders());
+//                }
+//            }
+//
+//        }
+//    }
 
     private User findUser(String id){
         for(User u:users){
@@ -171,6 +192,15 @@ public class Main {
         for(Order o:orders){
             if(o.getNumber()==id){
                 return o;
+
+            }
+        }
+        return null;
+    }
+    private Product findProductByName(String n){
+        for(Product p:products){
+            if(p.getName()==n){
+                return p;
 
             }
         }
