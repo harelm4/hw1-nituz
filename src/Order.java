@@ -20,6 +20,12 @@ public class Order {
         this.ship_to = ship_to;
         this.status = status;
     }
+    public void addLineItem(LineItem li){
+        lineItems.add(li);
+    }
+    public void delLineItem(LineItem li){
+        lineItems.add(li);
+    }
 
     public String getNumber() {
         return number;

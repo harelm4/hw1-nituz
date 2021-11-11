@@ -4,9 +4,9 @@ import java.util.List;
 public class Supplier {
     private String id;
     private String name;
-    private List<Product> products;
-
     private ArrayList<Product> products;
+
+
 
     public String getId() {
         return id;
@@ -20,9 +20,7 @@ public class Supplier {
         return name;
     }
 
-    public void setProducts(List<Product> products) {
-        this.products = products;
-    }
+
 
     public void setName(String name) {
         this.name = name;
