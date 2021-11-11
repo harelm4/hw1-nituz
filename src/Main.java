@@ -1,14 +1,16 @@
+import javax.sound.sampled.Line;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class Main {
-    ArrayList<User> users = new ArrayList<User>();
-    ArrayList<Order> orders = new ArrayList<Order>();
-    ArrayList<Product> products = new ArrayList<Product>();
-    ArrayList allInstances = new ArrayList();
-    Order lastOrder;
-    User userLoggedIn=null;
-    int nextOrderNumber=1;
+    static ArrayList<User> users = new ArrayList<User>();
+    static ArrayList<Order> orders = new ArrayList<Order>();
+    static ArrayList<Product> products = new ArrayList<Product>();
+    static  ArrayList<Object> allInstances = new ArrayList();
+    static Order lastOrder;
+    static  User userLoggedIn=null;
+    static int nextOrderNumber=1;
 
 
     public static void main(String[] args) {
@@ -75,7 +77,7 @@ public class Main {
 
 
     }
-    public User addUser(String id,String password,boolean isPremiumAccount){
+    static public User addUser(String id,String password,boolean isPremiumAccount){
         ShoppingCart shoppingCart=new ShoppingCart();
 
         Account account;
@@ -104,7 +106,7 @@ public class Main {
         users.add(user);
         return user;
     }
-    public Status loginUser(String id,String password){
+    static public Status loginUser(String id,String password){
         if(userLoggedIn==null){
             User u=findUser(id);
             if (u!=null && users.contains(u) && u.getPassword()==password){
@@ -114,14 +116,14 @@ public class Main {
         }
         return Status.failure;
     }
-    public Status logOut(String id){
+    static public Status logOut(String id){
         if(id== userLoggedIn.getLogin_id()){
             userLoggedIn=null;
             return Status.success;
         }
         return Status.failure;
     }
-    public int createNewOrder(String address){
+    static public int createNewOrder(String address){
         if(userLoggedIn==null){
             return -1;
         }
@@ -137,13 +139,20 @@ public class Main {
     //Add product to order *Order_ID* *Login_ID* *Product Name*
 
 
-    public Status addProductToOrder(String orderID,String userId,String productName){
+    static public Status addProductToOrder(String orderId,String userId,String productName){
+        Order order=findOrder(orderId);
+        ArrayList<LineItem> productsLineItems= findProductByName(productName).getLineItems();
+        //order<->line items
+        for(LineItem li:productsLineItems){
+            order.addLineItem(li);
+            li.setOrder(order);
+        }
 
 
-        findOrder(orderID).addLineItem(findProductByName(productName).);
+
     }
 
-    public Status DisplayOrder(){
+    static public Status DisplayOrder(){
         if(userLoggedIn.getState()==UserState.Closed)
             return Status.failure;
         Order lastOrder=userLoggedIn.getCustomer().getAccount().getOrders().peek();
@@ -179,7 +188,7 @@ public class Main {
 //        }
 //    }
 
-    private User findUser(String id){
+    static private User findUser(String id){
         for(User u:users){
             if(u.getLogin_id()==id){
                 return u;
@@ -188,7 +197,7 @@ public class Main {
         }
         return null;
     }
-    private Order findOrder(String id){
+    static private Order findOrder(String id){
         for(Order o:orders){
             if(o.getNumber()==id){
                 return o;
@@ -197,7 +206,7 @@ public class Main {
         }
         return null;
     }
-    private Product findProductByName(String n){
+    static private Product findProductByName(String n){
         for(Product p:products){
             if(p.getName()==n){
                 return p;
@@ -206,4 +215,5 @@ public class Main {
         }
         return null;
     }
+
 }
