@@ -59,7 +59,36 @@ public class Main {
              ה-Premium Account הנ"ל יהיה מקושר עם עליית המערכת ל-Product בשם Bamba.
          **/
 
-
+        Supplier Osem=new Supplier("Osem","Osem");
+        Supplier EastWest=new Supplier("EastWest","EastWest");
+        Product Bambaa=new Product("Bamba","Bamba");
+        Bambaa.setSupplier(Osem);
+        Osem.addProduct(Bambaa);
+        Product Ramen=new Product("Ramen","Ramen");
+        Ramen.setSupplier(EastWest);
+        EastWest.addProduct(Ramen);
+        User user=addUser("Dani","Dani123",false);
+        Customer customer=new Customer();
+        customer.setUser(user);
+        Account normalAccount=new Account();
+        customer.setAccount(normalAccount);
+        normalAccount.setCustomer(customer);
+        ShoppingCart shoppingCart=new ShoppingCart();
+        shoppingCart.setUser(user);
+        shoppingCart.setAccount(normalAccount);
+        normalAccount.setShoppingCart(shoppingCart);
+        PremiumAccount premiumAccount=new PremiumAccount();
+        premiumAccount.addProduct(Bambaa);
+        premiumAccount.setCustomer(customer);
+        User userPremium=addUser("Dana","Dana123",true);
+        Customer customerPremium=new Customer();
+        customerPremium.setUser(user);
+        customerPremium.setAccount(premiumAccount);
+        premiumAccount.setCustomer(customerPremium);
+        ShoppingCart PremiumShoppingCart=new ShoppingCart();
+        PremiumShoppingCart.setUser(userPremium);
+        PremiumShoppingCart.setAccount(premiumAccount);
+        premiumAccount.setShoppingCart(PremiumShoppingCart);
 
         int inputValue=-1;
         while (inputValue !=0){
@@ -77,7 +106,7 @@ public class Main {
 
 
     }
-    static public User addUser(String id,String password,boolean isPremiumAccount){
+    public static User addUser(String id,String password,boolean isPremiumAccount){
         ShoppingCart shoppingCart=new ShoppingCart();
 
         Account account;
@@ -106,7 +135,7 @@ public class Main {
         users.add(user);
         return user;
     }
-    static public Status loginUser(String id,String password){
+    public static Status loginUser(String id,String password){
         if(userLoggedIn==null){
             User u=findUser(id);
             if (u!=null && users.contains(u) && u.getPassword()==password){
@@ -116,14 +145,14 @@ public class Main {
         }
         return Status.failure;
     }
-    static public Status logOut(String id){
+    public static Status logOut(String id){
         if(id== userLoggedIn.getLogin_id()){
             userLoggedIn=null;
             return Status.success;
         }
         return Status.failure;
     }
-    static public int createNewOrder(String address){
+    public static int createNewOrder(String address){
         if(userLoggedIn==null){
             return -1;
         }
@@ -139,7 +168,7 @@ public class Main {
     //Add product to order *Order_ID* *Login_ID* *Product Name*
 
 
-    static public Status addProductToOrder(String orderId,String userId,String productName){
+    public static Status addProductToOrder(String orderId,String userId,String productName){
         Order order=findOrder(orderId);
         ArrayList<LineItem> productsLineItems= findProductByName(productName).getLineItems();
         //order<->line items
@@ -147,12 +176,13 @@ public class Main {
             order.addLineItem(li);
             li.setOrder(order);
         }
+        return Status.success
 
 
 
     }
 
-    static public Status DisplayOrder(){
+    public static Status DisplayOrder(){
         if(userLoggedIn.getState()==UserState.Closed)
             return Status.failure;
         Order lastOrder=userLoggedIn.getCustomer().getAccount().getOrders().peek();
@@ -165,6 +195,11 @@ public class Main {
                         +"Order total Payment"+lastOrder.getSumOfPayments()
         );
         return Status.success;
+    }
+
+    //Add Product *Product_Name* *Supplier_Name*
+    public static Status addProduct(String productName,String supplierName){
+        //
     }
 
 
@@ -188,7 +223,7 @@ public class Main {
 //        }
 //    }
 
-    static private User findUser(String id){
+    private static User findUser(String id){
         for(User u:users){
             if(u.getLogin_id()==id){
                 return u;
@@ -197,7 +232,7 @@ public class Main {
         }
         return null;
     }
-    static private Order findOrder(String id){
+    private static  Order findOrder(String id){
         for(Order o:orders){
             if(o.getNumber()==id){
                 return o;
@@ -206,7 +241,7 @@ public class Main {
         }
         return null;
     }
-    static private Product findProductByName(String n){
+    private static  Product findProductByName(String n){
         for(Product p:products){
             if(p.getName()==n){
                 return p;
