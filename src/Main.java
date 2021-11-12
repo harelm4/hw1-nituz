@@ -1,6 +1,8 @@
 import javax.sound.sampled.Line;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Scanner;
 import java.util.Stack;
 
 public class Main {
@@ -14,106 +16,237 @@ public class Main {
 
 
     public static void main(String[] args) {
-        /**
-         * todo:supported commends:
-            1. Add user *Login_id* - and after should ask from the user to define : password , is the account a premium one,and define the rest of the user account attributes
-            2.Remove user *Login_id*
-            3.Login user *Login_id*   *password* - should be only one user logged in (remember to update user state)
-            4.Logout user *Login_id*
-            5.Create new order *address* - update "ordered" time, **display order id as output to user**
-            6.Add product to order *Order_ID* *Login_ID* *Product Name*
-            7.Display order-
-             	הפקודה תציג את הפרטים המופיעים בתרשים המחלקות:
-             	מספר הזמנה
-             	תאריך ביצוע ההזמנה
-             	תאריך השילוח
-             	כתובת למשלוח
-             	סטטוס ההזמנה
-             	סכום כולל לתשלום
-            8.Link Product *Product_Name* *Price* *Quantity*
-            9. Add Product *Product_Name* *Supplier_Name*
-            10. Delete Product *Product_name* -the Product_name is unique
-            11(10).ShowAllObjects -show all object with a unique id
-            12(11).ShowObjectId *id* - display all object attributes and all the names of the objects that the *id* object connected to
 
-         *todo:when the system inits the folowing object should be created:
-             	id: Osem
-             	name: Osem
-             o	Supplier עם הפרטים הבאים:
-             	id: EastWest
-             	name: EastWest
-             o	Product עם הפרטים הבאים:
-             	id: Bamba
-             	name: Bamba
-             	יקושר ל-Supplier בעל ה-id: ‘Osem’.
-             o	Product עם הפרטים הבאים:
-             	id: Ramen
-             	name: Ramen
-             	יקושר ל-Supplier בעל ה-id: ‘EastWest’.
-             o	Account רגיל המשויך ל-user עם הפרטים הבאים:
-             	Login_id: Dani
-             	Password: Dani123
-             o	Premium Account המשויך ל-user עם הפרטים הבאים:
-             	Login_id: Dana
-             	Password: Dana123
-             ה-Premium Account הנ"ל יהיה מקושר עם עליית המערכת ל-Product בשם Bamba.
-         **/
 
         Supplier Osem=new Supplier("Osem","Osem");
         Supplier EastWest=new Supplier("EastWest","EastWest");
-        Product Bambaa=new Product("Bamba","Bamba");
-        Bambaa.setSupplier(Osem);
-        Osem.addProduct(Bambaa);
-        Product Ramen=new Product("Ramen","Ramen");
-        Ramen.setSupplier(EastWest);
-        EastWest.addProduct(Ramen);
-        User user=addUser("Dani","Dani123",false);
-        Customer customer=new Customer();
-        customer.setUser(user);
-        Account normalAccount=new Account();
-        customer.setAccount(normalAccount);
-        normalAccount.setCustomer(customer);
-        ShoppingCart shoppingCart=new ShoppingCart();
-        shoppingCart.setUser(user);
-        shoppingCart.setAccount(normalAccount);
-        normalAccount.setShoppingCart(shoppingCart);
-        PremiumAccount premiumAccount=new PremiumAccount();
-        premiumAccount.addProduct(Bambaa);
-        premiumAccount.setCustomer(customer);
-        User userPremium=addUser("Dana","Dana123",true);
-        Customer customerPremium=new Customer();
-        customerPremium.setUser(user);
-        customerPremium.setAccount(premiumAccount);
-        premiumAccount.setCustomer(customerPremium);
-        ShoppingCart PremiumShoppingCart=new ShoppingCart();
-        PremiumShoppingCart.setUser(userPremium);
-        PremiumShoppingCart.setAccount(premiumAccount);
-        premiumAccount.setShoppingCart(PremiumShoppingCart);
+        Product Bambaa=new Product("Bamba","Bamba", Osem);
+        //Bambaa.setSupplier(Osem);
+        //Osem.addProduct(Bambaa);
+        Product Ramen=new Product("Ramen","Ramen", EastWest);
+        //Ramen.setSupplier(EastWest);
+        //EastWest.addProduct(Ramen);
 
+        User user=addUser("Dani","Dani123",false,"BEER SHEVA 123");
+        /**
+         Customer customer=new Customer();
+         customer.setUser(user);
+         Account normalAccount=new Account();
+         customer.setAccount(normalAccount);
+         normalAccount.setCustomer(customer);
+         ShoppingCart shoppingCart=new ShoppingCart();
+         shoppingCart.setUser(user);
+         shoppingCart.setAccount(normalAccount);
+         normalAccount.setShoppingCart(shoppingCart);
+         **/
+
+        User userPremium=addUser("Dana","Dana123",true, "BEER SHEVA 124");
+        PremiumAccount p = (PremiumAccount) userPremium.getCustomer().getAccount();
+        p.addProduct(Bambaa);
+        //(PremiumAccount (userPremium.getCustomer().getAccount()).addProduct(Bambaa);
+        //premiumAccount.setCustomer(customer);
+
+        /**
+         Customer customerPremium=new Customer();
+         customerPremium.setUser(user);
+         customerPremium.setAccount(premiumAccount);
+         premiumAccount.setCustomer(customerPremium);
+         ShoppingCart PremiumShoppingCart=new ShoppingCart();
+         PremiumShoppingCart.setUser(userPremium);
+         PremiumShoppingCart.setAccount(premiumAccount);
+         premiumAccount.setShoppingCart(PremiumShoppingCart);
+
+         **/
+
+
+        Scanner myObj = new Scanner(System.in);
         int inputValue=-1;
         while (inputValue !=0){
             System.out.println(
                     "choose action:\n" +
                             "1.Add user\n"+
                             "2.Remove user\n"+
-                            "3.Login user\n "+
+                            "3.Login user\n"+
                             "4.Logout user\n"+
-                            "5."
+                            "5.Create new order\n"+
+                            "6.Add product to order\n"+
+                            "7.Display order\n"+
+                            "8.Link Product\n"+
+                            "9.Add Product\n"+
+                            "10.Delete Product\n"+
+                            "11.ShowAllObject\n"+
+                            "12.ShowObjectId\n"+
+                            "0.Exit\n"
             );
 
-            //if choose add user
+            System.out.println("Please select an operation:\n");
+            String OpNumber = myObj.nextLine();
+            inputValue = Integer.parseInt(OpNumber);
+            switch(inputValue){
+                case 1:{ //Add user
+                    System.out.println("Please enter a User Id you wish to add:\n");
+                    String UserID = myObj.nextLine();
+                    if (findUser(UserID) != null){
+                        System.out.println("User ID already taken!\n");
+                        break;
+                    }
+                    System.out.println("Please enter a Password: (If you wish to have no password, please type '.')\n");
+                    String UserPassword = myObj.nextLine();//fix add user function
+                    System.out.println("Does the User have a Premium Account?: (Y/N)\n");
+                    String UserPremium = myObj.nextLine();
+                    boolean UserPremiumBool = false;
+                    if (UserPremium.equals("Y")) {UserPremiumBool= true; }
+                    if (UserPremium.equals("N")) {UserPremiumBool= false; }
+                    addUser(UserID,UserPassword,UserPremiumBool,"TEL AVIV 1234");
+                    break;
+                }
+                case 2:{ //Remove user
+                    System.out.println("Please enter a User Id you wish to remove:\n");
+                    String UserID = myObj.nextLine();
+                    if (findUser(UserID) != null) {
+                        if (removeUser(UserID) == Status.success){
+                            System.out.println("User removed successfully.\n");
+                            break;
+                        }
+                    }
+                    else {
+                        System.out.println("No user found with id "+UserID+" \n" );
+                        break;
+                    }
+                    break;
+                }
+                case 3:{ //Login user
+                    System.out.println("Please enter a User Id you wish to log in to:\n");
+                    String UserID = myObj.nextLine();
+                    if (findUser(UserID) == null){
+                        break;
+                    }
+                    System.out.println("Please enter a Password: (If User has no password, please type '.')\n");
+                    String UserPassword = myObj.nextLine();//fix loginUser function
+                    if (loginUser(UserID,UserPassword) == Status.success){
+                        System.out.println("User successfully logged in!\n");
+                        break;
+                    }
+                    System.out.println("Another User is already logged in!\n");
+                    break;
+                }
+                case 4:{ //Logout user
+                    System.out.println("Please enter a User Id you wish to log in to:\n");
+                    String UserID = myObj.nextLine();
+                    if (findUser(UserID) == null){
+                        break;
+                    }
+                    if (logOut(UserID) == Status.success){
+                        System.out.println("User successfully logged out!\n");
+                        break;
+                    }
+                    System.out.println("Current User id isn't "+ UserID +" !\n");
+                    break;
+                }
+                case 5:{ //Create new order
+                    System.out.println("Please enter an address:\n");
+                    String UserAddress= myObj.nextLine();
+
+                    int OrderId = createNewOrder(UserAddress);
+                    System.out.println("Order Number is: "+ OrderId+"\n");
+                    break;
+                }
+                case 6:{ //Add product to order
+                    System.out.println("Please enter an Order Id:\n");
+                    String OrderID = myObj.nextLine();
+                    if (findOrder(OrderID) == null){
+                        System.out.println("Order doesn't exist!\n");
+                        break;
+                    }
+                    System.out.println("Please enter User login Id:\n");
+                    String UserID = myObj.nextLine();//fix add user function
+                    if (findUser(UserID) == null){
+                        System.out.println("User ID doesn't exist!\n");
+                        break;
+                    }
+                    System.out.println("Enter a product name the User wishes to buy:\n");
+                    String ProductName = myObj.nextLine();
+                    if (addProductToOrder(OrderID,UserID,ProductName)== Status.success){
+                        System.out.println(ProductName+" has been successfully added to Order " + OrderID +" !\n");
+                        break;
+                    }
+                    System.out.println(ProductName+" Doesn't exist!\n");
+                    break;
+                }
+                case 7:{ //Display order
+                    if (DisplayOrder() == Status.failure){
+                        System.out.println("User state is currently closed!\n");
+                        break;
+                    }
+                }
+                case 8:{ //Link Product
+
+
+                }
+                case 9:{ //Add Product
+                    System.out.println("Please enter a product name you wish to add:\n");
+                    String ProductName = myObj.nextLine();
+                    if (findProductByName(ProductName) != null){
+                        System.out.println("Product name already taken!\n"); /////////////////////////////
+                        break;
+                    }
+                    System.out.println("Please enter a Supplier name:\n");
+                    String SupplierName = myObj.nextLine();//fix add user function
+                    if (findSupplierByName(SupplierName) == null){ /////////////////
+                        System.out.println("Supplier doesn't exist!\n");
+                        break;
+                    }
+                    if (addProduct(ProductName,SupplierName) == Status.success){
+                        System.out.println("Product added successfully!\n");
+                        break;
+                    }
+                    System.out.println("Product wasn't added successfully!\n");
+                    break;
+
+                }
+                case 10:{ //Delete Product
+                    System.out.println("Please enter a product name you wish to delete:\n");
+                    String ProductName = myObj.nextLine();
+                    if (findProductByName(ProductName) == null){
+                        System.out.println("Product name doesn't exist!\n");
+                        break;
+                    }
+                    if(deleteProduct(ProductName) == Status.success){
+                        System.out.println("Product "+ProductName +" successfully deleted!\n");
+                        break;
+                    }
+                    System.out.println("Failed to delete product "+ProductName +"!\n");
+                    break;
+                }
+                case 11:{ //ShowAllObject
+                    showAllObjects();
+                }
+                case 12:{ //ShowObjectId
+                    System.out.println("Please enter an Object Id:\n");
+                    String ObjectId= myObj.nextLine();
+                    showObjectId(ObjectId);
+                    break;
+
+                }
+                case 0:{ //Exit
+                    System.out.println("Thank you for visiting our online store!\n");
+                    System.out.println("We hope to see you again!\n");
+                    break;
+                }
+            }
         }
-
-
     }
-    public static User addUser(String id,String password,boolean isPremiumAccount){
-        ShoppingCart shoppingCart=new ShoppingCart();
+
+
+
+    public static User addUser(String id,String password,boolean isPremiumAccount, String address){
+        ShoppingCart shoppingCart=new ShoppingCart(new Date(2021,1,1));
 
         Account account;
-        if(isPremiumAccount) account=new PremiumAccount();
-        else account=new Account();
+        if(isPremiumAccount) account=new PremiumAccount(id,"Beer Sheva",false,new Date(2020,1,1),null,5);
+        else account=new Account(id,"Beer Sheva",false,new Date(2020,1,1),null,5);
 
-        Customer customer=new Customer();
+        Customer customer=new Customer(id,new Address(address),"054-1234567","bgu@post.com");
 
         allInstances.add(shoppingCart);
         allInstances.add(customer);
@@ -123,13 +256,13 @@ public class Main {
         //account->customer
         account.setCustomer(customer);
         //customer->account
-        customer.account=account;
+        customer.setAccount(account);
         //account->shopping cart
-        account.shoppingCart=shoppingCart;
+        account.setShoppingCart(shoppingCart);
         //creating a new user
         User user = new User(id,password,UserState.New);
         //user->customer
-        user.customer=customer;
+        user.setCustomer(customer);
 
         allInstances.add(user);
         users.add(user);
@@ -158,29 +291,16 @@ public class Main {
         }
         Address addressObj=new Address(address);
         allInstances.add(addressObj);
-        Order order=new Order(String.valueOf(nextOrderNumber), LocalDateTime.now(),addressObj,OrderStatus.New);
+        Order order=new Order(String.valueOf(nextOrderNumber), LocalDateTime.now(),addressObj,OrderStatus.New, userLoggedIn.getCustomer().getAccount());
         allInstances.add(order);
         orders.add(order);
-        userLoggedIn.getCustomer().account.addOrder(order);
+        //userLoggedIn.getCustomer().getAccount().addOrder(order);
         nextOrderNumber+=1;
         return nextOrderNumber-1;
     }
     //Add product to order *Order_ID* *Login_ID* *Product Name*
 
 
-    public static Status addProductToOrder(String orderId,String userId,String productName){
-        Order order=findOrder(orderId);
-        ArrayList<LineItem> productsLineItems= findProductByName(productName).getLineItems();
-        //order<->line items
-        for(LineItem li:productsLineItems){
-            order.addLineItem(li);
-            li.setOrder(order);
-        }
-        return Status.success
-
-
-
-    }
 
     public static Status DisplayOrder(){
         if(userLoggedIn.getState()==UserState.Closed)
@@ -190,38 +310,12 @@ public class Main {
                 "Order Number: "+ lastOrder.getNumber()
                         +"Order Date:"+ lastOrder.getOrdered()
                         +"Order Shipping Date:"+lastOrder.getShipped()
-                        +"Order Adress:"+lastOrder.getShip_to().getAdress()
+                        +"Order Adress:"+lastOrder.getShip_to().getAddress()
                         +"Order Status:"+lastOrder.getStatus().name()
                         +"Order total Payment"+lastOrder.getSumOfPayments()
         );
         return Status.success;
     }
-
-    //Add Product *Product_Name* *Supplier_Name*
-    public static Status addProduct(String productName,String supplierName){
-        //
-    }
-
-
-//    public void removeUser(String id){
-//        //todo:to complete at the end
-//        User user=findUser(id);
-//        if(user!=null){
-//            allInstances.remove(user);
-//            allInstances.remove(user.getCustomer());
-//            allInstances.remove(user.getCustomer().getAccont());
-//            if(user.getCustomer().getAccont().getOrders().leangth != 0){
-//                allInstances.removeAll(user.getCustomer().getAccont().getOrders());
-//            }
-//            if(user.getShoppingCart() != null){
-//                allInstances.remove(user.getShoppingCart());
-//                if(user.getShoppingCart.leangth != 0){
-//                    allInstances.removeAll(user.getCustomer().getAccont().getOrders());
-//                }
-//            }
-//
-//        }
-//    }
 
     private static User findUser(String id){
         for(User u:users){
@@ -250,5 +344,67 @@ public class Main {
         }
         return null;
     }
+
+    private static Status findSupplierByName(String supplierName) {
+        return null;
+    }
+
+    private static Status deleteProduct(String productName) {
+        return null;
+    }
+
+    //Add Product *Product_Name* *Supplier_Name*
+    public static Status addProduct(String productName,String supplierName){
+        //
+        return null;
+    }
+
+
+    public static Status removeUser(String id) {
+        return null;
+    }
+//        //todo:to complete at the end
+//        User user=findUser(id);
+//        if(user!=null){
+//            allInstances.remove(user);
+//            allInstances.remove(user.getCustomer());
+//            allInstances.remove(user.getCustomer().getAccont());
+//            if(user.getCustomer().getAccont().getOrders().leangth != 0){
+//                allInstances.removeAll(user.getCustomer().getAccont().getOrders());
+//            }
+//            if(user.getShoppingCart() != null){
+//                allInstances.remove(user.getShoppingCart());
+//                if(user.getShoppingCart.leangth != 0){
+//                    allInstances.removeAll(user.getCustomer().getAccont().getOrders());
+//                }
+//            }
+//
+//        }
+//    }
+
+    private static Status showAllObjects() {
+        return null;
+    }
+
+    private static Status showObjectId(String objectId) {
+        return null;
+    }
+
+    public static Status addProductToOrder(String orderId,String userId,String productName){
+        /**
+        Order order=findOrder(orderId);
+        ArrayList<LineItem> productsLineItems= findProductByName(productName).getLineItems();
+        //order<->line items
+        for(LineItem li:productsLineItems){
+            order.addLineItem(li);
+            li.setOrder(order);
+        }
+        return Status.success
+
+
+        **/
+        return null;
+    }
+
 
 }
