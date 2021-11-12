@@ -6,24 +6,51 @@ public class User {
     private Customer customer;
     private ShoppingCart shoppingCart;
 
+    /**
+     * When creating new user, need to attach a customer.
+     * According to the directions given, we can attach it with outside function because of 1:1 association
+     * @param login_id
+     * @param password
+     * @param state
+     */
     public User(String login_id, String password, UserState state) {
         this.login_id = login_id;
         this.password = password;
         this.state = state;
+    }
+    public void setCustomer(Customer customer) {
         this.customer = customer;
-        customer.setUser(this);
+    }
+    public void setShoppingCart(ShoppingCart shoppingCart) {
+        this.shoppingCart = shoppingCart;
+    }
+
+    public void remove()
+    {
+        customer.removeUser();
+        customer=null;
+        shoppingCart.userwasdeleted(); //if no user -> no shopping cart
+        shoppingCart=null;
+    }
+
+    public void shoppingCartWasDeleted() {
+        shoppingCart=null;
+    }
+
+    public void customerWasDeleted() {
+        customer=null;
+        shoppingCart.userwasdeleted(); //if no user -> no shopping cart
+        shoppingCart=null;
     }
 
 
     public Customer getCustomer() {
         return customer;
     }
-
-    public void remove()
-    {
-        customer.remove();
-        customer=null;
+    public ShoppingCart getShoppingCart() {
+        return shoppingCart;
     }
+
 
     public String getLogin_id() {
         return login_id;
@@ -37,9 +64,6 @@ public class User {
         return state;
     }
 
-    public ShoppingCart getShoppingCart() {
-        return shoppingCart;
-    }
 
     public void setLogin_id(String login_id) {
         this.login_id = login_id;
@@ -53,15 +77,4 @@ public class User {
         this.state = state;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
-
-    public void setShoppingCart(ShoppingCart shoppingCart) {
-        this.shoppingCart = shoppingCart;
-    }
-
-    public void delCustomer() {
-        customer=null;
-    }
 }

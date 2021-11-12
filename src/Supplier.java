@@ -6,34 +6,6 @@ public class Supplier {
     private String name;
     private ArrayList<Product> products;
 
-
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public ArrayList<Product> getProducts() {
-        return products;
-    }
-
-    public void setProducts(ArrayList<Product> products) {
-        this.products = products;
-    }
-
     public Supplier(String id, String name) {
         this.id = id;
         this.name = name;
@@ -60,5 +32,39 @@ public class Supplier {
         products.remove(product);
     }
 
+    public void remove(){
+        int i=0;
+        for (i=0; i<products.size(); i++)
+        {
+            products.get(i).supplierWasDeleted();
+        }
+        products=null;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public ArrayList<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(ArrayList<Product> products) {
+        this.products = products;
+    }
 
 }

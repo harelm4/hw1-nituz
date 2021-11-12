@@ -14,12 +14,15 @@ public class Order {
     private List<LineItem> lineItems;
     private List<Payment>  payments;
 
-    public Order(String number, LocalDateTime ordered, Address ship_to, OrderStatus status) {
+    public Order(String number, LocalDateTime ordered, Address ship_to, OrderStatus status, Account account) {
         this.number = number;
         this.ordered = ordered;
         this.ship_to = ship_to;
         this.status = status;
+        this.account=account;
+        this.account.addOrder(this);
     }
+
     public Status addLineItem(LineItem li){
         if (li==null)
             return Status.failure;
@@ -27,10 +30,65 @@ public class Order {
             return Status.failure;
         lineItems.add(li);
         return Status.success;
-
     }
+
     public void delLineItem(LineItem li){
         lineItems.remove(li);
+    }
+
+    public void remove()
+    {
+        int i=0;
+        for (i=0; i<lineItems.size(); i++)
+        {
+            lineItems.get(i).orderWasDeleted();
+        }
+        lineItems=null;
+        account.deleteOrder(this);
+        account=null;
+
+        int j=0;
+        for (j=0; j<payments.size(); j++)
+        {
+            payments.get(i).orderWasDeleted();
+        }
+        payments=null;
+    }
+
+    public void accountWasDeleted() {
+        int i=0;
+        for (i=0; i<lineItems.size(); i++)
+        {
+            lineItems.get(i).orderWasDeleted();
+        }
+        lineItems=null;
+        //account.deleteOrder(this);
+        account=null;
+
+        int j=0;
+        for (j=0; j<payments.size(); j++)
+        {
+            payments.get(i).orderWasDeleted();
+        }
+        payments=null;
+
+    }
+
+
+    public void addPayment(Payment p){
+        payments.add(p);
+    }
+    public void deletePayment(Payment p){
+        payments.remove(p);
+    }
+    public float getSumOfPayments()
+    {
+        float sum=0;
+        for (Payment p:
+                payments) {
+            sum+=p.total;
+        }
+        return sum;
     }
 
     public String getNumber() {
@@ -103,22 +161,6 @@ public class Order {
 
     public void setPayments(List<Payment> payments) {
         this.payments = payments;
-    }
-
-    public void addPayment(Payment p){
-        payments.add(p);
-    }
-    public void deletePayment(Payment p){
-        payments.remove(p);
-    }
-    public float getSumOfPayments()
-    {
-        float sum=0;
-        for (Payment p:
-                payments) {
-            sum+=p.total;
-        }
-        return sum;
     }
 
 

@@ -3,10 +3,13 @@ import java.util.Date;
 
 public class ShoppingCart {
     private Date created;
-
     private User user;
     private Account account;
     private ArrayList<LineItem> lineItems;
+
+    public ShoppingCart(Date created) {
+        this.created = created;
+    }
 
     public Date getCreated() {
         return created;
@@ -50,5 +53,31 @@ public class ShoppingCart {
     }
     public void delLineItem(LineItem li){
         lineItems.remove(li);
+    }
+
+    public void userwasdeleted() {
+        //remove all connected
+        this.user=null;
+        this.account.shoppingCartWasDeleted();
+        this.account=null;
+        int i=0;
+        for (i=0; i<lineItems.size(); i++)
+        {
+            lineItems.get(i).shoppingCartWasDeleted();
+        }
+        lineItems=null;
+    }
+
+    public void delAccount(Account account) {
+        this.user.shoppingCartWasDeleted();
+        this.user=null;
+        this.account=null;
+        int i=0;
+        for (i=0; i<lineItems.size(); i++)
+        {
+            lineItems.get(i).shoppingCartWasDeleted();
+        }
+        lineItems=null;
+
     }
 }

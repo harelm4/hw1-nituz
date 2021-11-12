@@ -5,7 +5,25 @@ public class Customer {
     private String email;
 
     private User user;
+    private Account account;
 
+    public Customer(String id, Address address, String phone, String email) {
+        this.id = id;
+        this.address = address;
+        this.phone = phone;
+        this.email = email;
+    }
+
+    public void accountWasDeleted(Account account) {
+    }
+
+    public void remove()
+    {
+        user.customerWasDeleted();
+        user=null;
+        account.customerWasDeleted();
+        account=null;
+    }
     public boolean setUser(User user) {
         if (this.user==null || user.getCustomer()!=this)
             this.user=user;
@@ -14,9 +32,20 @@ public class Customer {
         return true;
     }
 
-    public void remove() {
-        if (user.getCustomer()==this)
-            user.delCustomer();
+    public void removeUser() {
         user=null;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public boolean setAccount(Account account) {
+        if (this.account==null || account.getCustomer()!=this)
+            this.account=account;
+        else
+            return false;
+        return true;
+
     }
 }

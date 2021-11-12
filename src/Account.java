@@ -10,11 +10,123 @@ public class Account {
         public Date closed;
         public int balance;
         //shold be stack to support command no.7
-        Stack<Order> orders=new Stack<Order>();
-        ArrayList<Payment> payments = new ArrayList<Payment>();
 
+
+        private Stack<Order> orders=new Stack<Order>();
+        private ArrayList<Payment> payments = new ArrayList<Payment>();
         private Customer customer;
         private ShoppingCart shoppingCart;
+
+        /**
+         * no need for orders & payments.
+         * no need to get customer & shoppingCart because of the 1:1 associations, based on the instructions given
+         * @param id
+         * @param billing_address
+         * @param is_closed
+         * @param open
+         * @param closed
+         * @param balance
+         */
+        public Account(String id, String billing_address, boolean is_closed, Date open, Date closed, int balance) {
+                this.id = id;
+                this.billing_address = billing_address;
+                this.is_closed = is_closed;
+                this.open = open;
+                this.closed = closed;
+                this.balance = balance;
+        }
+
+        public Status addPayment(Payment p){
+                if (p==null)
+                        return Status.failure;
+                if (payments.contains(p))
+                        return Status.failure;
+                payments.add(p);
+                return Status.success;
+
+        }
+        public void deletePayment(Payment p){
+                payments.remove(p);
+        }
+        public Status addOrder(Order o){
+
+                if (o==null)
+                        return Status.failure;
+                if (orders.contains(o))
+                        return Status.failure;
+                orders.add(o);
+                return Status.success;
+
+        }
+
+        public void remove()
+        {
+                customer.accountWasDeleted(this);
+                customer=null;
+                shoppingCart.delAccount(this);
+                shoppingCart=null;
+
+                int i=0;
+                for (i=0; i<orders.size(); i++)
+                {
+                        orders.get(i).accountWasDeleted();
+                }
+                orders=null;
+
+                int j=0;
+                for (j=0; j<payments.size(); j++)
+                {
+                        payments.get(i).accountWasDeleted();
+                }
+                payments=null;
+
+        }
+
+        public void shoppingCartWasDeleted() {
+                customer.accountWasDeleted(this);
+                customer=null;
+                shoppingCart=null;
+
+                int i=0;
+                for (i=0; i<orders.size(); i++)
+                {
+                        orders.get(i).accountWasDeleted();
+                }
+                orders=null;
+
+                int j=0;
+                for (j=0; j<payments.size(); j++)
+                {
+                        payments.get(i).accountWasDeleted();
+                }
+                payments=null;
+
+        }
+
+        public void customerWasDeleted(){
+                customer=null;
+                shoppingCart.delAccount(this);
+                shoppingCart=null;
+
+                int i=0;
+                for (i=0; i<orders.size(); i++)
+                {
+                        orders.get(i).accountWasDeleted();
+                }
+                orders=null;
+
+                int j=0;
+                for (j=0; j<payments.size(); j++)
+                {
+                        payments.get(i).accountWasDeleted();
+                }
+                payments=null;
+
+        }
+
+        public void deleteOrder(Order o){
+                orders.remove(o);
+        }
 
         public ShoppingCart getShoppingCart() {
                 return shoppingCart;
@@ -96,33 +208,5 @@ public class Account {
                 this.payments = payments;
         }
 
-        public Status addPayment(Payment p){
-                if (p==null)
-                        return Status.failure;
-                if (payments.contains(p))
-                        return Status.failure;
-                payments.add(p);
-                return Status.success;
 
-        }
-        public void deletePayment(Payment p){
-                payments.remove(p);
-        }
-        public Status addOrder(Order o){
-
-                if (o==null)
-                        return Status.failure;
-                if (orders.contains(o))
-                        return Status.failure;
-                orders.add(o);
-                return Status.success;
-
-        }
-        public void deleteOrder(Order o){
-                orders.remove(o);
-        }
-
-
-
-
-        }
+}
