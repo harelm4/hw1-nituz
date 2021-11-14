@@ -18,6 +18,18 @@ public class User {
         this.password = password;
         this.state = state;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "login_id='" + login_id + '\'' +
+                ", password='" + password + '\'' +
+                ", state=" + state +
+                ", customer=" + customer.getId() +
+                ", shoppingCart=" + shoppingCart +
+                '}';
+    }
+
     public void setCustomer(Customer customer) {
         this.customer = customer;
     }

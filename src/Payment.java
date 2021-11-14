@@ -20,6 +20,18 @@ public abstract class Payment {
         this.order.addPayment(this);
     }
 
+    @Override
+    public String toString() {
+        return "Payment{" +
+                "id='" + id + '\'' +
+                ", paid=" + paid +
+                ", total=" + total +
+                ", details='" + details + '\'' +
+                ", account=" + account +
+                ", order=" + order +
+                '}';
+    }
+
     public void orderWasDeleted() {
         order=null;
         account.deletePayment(this);

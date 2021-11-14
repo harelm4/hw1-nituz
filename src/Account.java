@@ -12,6 +12,22 @@ public class Account {
         //shold be stack to support command no.7
 
 
+        @Override
+        public String toString() {
+                return "Account{" +
+                        "id='" + id + '\'' +
+                        ", billing_address='" + billing_address + '\'' +
+                        ", is_closed=" + is_closed +
+                        ", open=" + open +
+                        ", closed=" + closed +
+                        ", balance=" + balance +
+                        ", orders=" + orders +
+                        ", payments=" + payments+
+                        ", customer=" + customer.getId() +
+                        ", shoppingCart=" + shoppingCart +
+                        '}';
+        }
+
         private Stack<Order> orders=new Stack<Order>();
         private ArrayList<Payment> payments = new ArrayList<Payment>();
         private Customer customer;

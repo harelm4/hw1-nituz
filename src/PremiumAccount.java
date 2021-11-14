@@ -19,6 +19,13 @@ public class PremiumAccount extends Account {
         super(id, billing_address, is_closed, open, closed, balance);
     }
 
+    @Override
+    public String toString() {
+        return "PremiumAccount{" +
+                "products=" + products +
+                '}';
+    }
+
     public Status addProduct(Product p){
         if (p==null)
             return Status.failure;

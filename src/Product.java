@@ -16,6 +16,17 @@ public class Product {
         supplier.addProduct(this);
     }
 
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", supplier=" + supplier.getId() +
+                ", lineItems=" + lineItems +
+                ", premiumAccount=" + premiumAccount+
+                '}';
+    }
+
     public void deleteProduct()
     {
         supplier.delProduct(this);

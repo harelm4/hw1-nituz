@@ -6,6 +6,17 @@ public class LineItem {
     private Product product;
     private Order order;
 
+    @Override
+    public String toString() {
+        return "LineItem{" +
+                "quantity=" + quantity +
+                ", price=" + price +
+                ", shoppingCart=" + shoppingCart+
+                ", product=" + product +
+                ", order=" + order +
+                '}';
+    }
+
     public LineItem(ShoppingCart shoppingCart, Order order, Product product)
     {
         this.shoppingCart=shoppingCart;

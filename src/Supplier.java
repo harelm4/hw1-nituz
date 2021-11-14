@@ -18,6 +18,15 @@ public class Supplier {
         products = prods;
     }
 
+    @Override
+    public String toString() {
+        return "Supplier{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", products=" + products +
+                '}';
+    }
+
     public Status addProduct(Product p)
     {
         if (p==null)

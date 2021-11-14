@@ -1,19 +1,17 @@
 import javax.sound.sampled.Line;
+import java.rmi.dgc.VMID;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Scanner;
-import java.util.Stack;
+import java.util.*;
 
 public class Main {
     static ArrayList<User> users = new ArrayList<User>();
     static ArrayList<Order> orders = new ArrayList<Order>();
     static ArrayList<Product> products = new ArrayList<Product>();
-    static  ArrayList<Object> allInstances = new ArrayList();
+    static HashMap<Integer,Object> allInstances = new HashMap<Integer,Object>();
     static Order lastOrder;
     static  User userLoggedIn=null;
     static int nextOrderNumber=1;
-
+    static int nextSystemId=0;
 
     public static void main(String[] args) {
 
@@ -220,6 +218,7 @@ public class Main {
                 }
                 case 11:{ //ShowAllObject
                     showAllObjects();
+                    break;
                 }
                 case 12:{ //ShowObjectId
                     System.out.println("Please enter an Object Id:\n");
@@ -248,9 +247,9 @@ public class Main {
 
         Customer customer=new Customer(id,new Address(address),"054-1234567","bgu@post.com");
 
-        allInstances.add(shoppingCart);
-        allInstances.add(customer);
-        allInstances.add(account);
+        allInstances.put(getSystemId(),shoppingCart);
+        allInstances.put(getSystemId(),customer);
+        allInstances.put(getSystemId(),account);
         //shopping cart->account
         shoppingCart.setAccount(account);
         //account->customer
@@ -263,8 +262,15 @@ public class Main {
         User user = new User(id,password,UserState.New);
         //user->customer
         user.setCustomer(customer);
+        //customer->user
+        customer.setUser(user);
+        //shopping cart-> user
+        shoppingCart.setUser(user);
+        //todo-decide if it should be here
+        //user->shopping cart
+        user.setShoppingCart(shoppingCart);
 
-        allInstances.add(user);
+        allInstances.put(getSystemId(),user);
         users.add(user);
         return user;
     }
@@ -290,9 +296,9 @@ public class Main {
             return -1;
         }
         Address addressObj=new Address(address);
-        allInstances.add(addressObj);
+        allInstances.put(getSystemId(),addressObj);
         Order order=new Order(String.valueOf(nextOrderNumber), LocalDateTime.now(),addressObj,OrderStatus.New, userLoggedIn.getCustomer().getAccount());
-        allInstances.add(order);
+        allInstances.put(getSystemId(),order);
         orders.add(order);
         //userLoggedIn.getCustomer().getAccount().addOrder(order);
         nextOrderNumber+=1;
@@ -346,15 +352,18 @@ public class Main {
     }
 
     private static Status findSupplierByName(String supplierName) {
+        //todo
         return null;
     }
 
     private static Status deleteProduct(String productName) {
+        //todo
         return null;
     }
 
     //Add Product *Product_Name* *Supplier_Name*
     public static Status addProduct(String productName,String supplierName){
+        //todo
         //
         return null;
     }
@@ -383,28 +392,41 @@ public class Main {
 //    }
 
     private static Status showAllObjects() {
-        return null;
+        //printing the memory address of each object
+        System.out.println(allInstances.keySet());
+        return Status.success;
     }
 
     private static Status showObjectId(String objectId) {
-        return null;
+        int key=Integer.parseInt(objectId);
+        if(allInstances.keySet().contains(key))
+            System.out.println(allInstances.get(key));
+        return Status.success;
     }
 
+    //Add product to order *Order_ID* *Login_ID* *Product Name*
     public static Status addProductToOrder(String orderId,String userId,String productName){
-        /**
+        //todo
         Order order=findOrder(orderId);
-        ArrayList<LineItem> productsLineItems= findProductByName(productName).getLineItems();
-        //order<->line items
-        for(LineItem li:productsLineItems){
-            order.addLineItem(li);
-            li.setOrder(order);
+        //delete order from userId product list
+        Account acc=findUser(userId).getCustomer().getAccount();
+        if(acc instanceof PremiumAccount){
+            ((PremiumAccount) acc).delProduct(findProductByName(productName));
         }
-        return Status.success
+        else{
+            return Status.failure;
+        }
+        //add product to logged in order
+        //how can i know what LineItem should i add to Order?????
+//        LineItem productLineItem=findProductByName(productName).getLineItems();
+        return Status.success;
 
 
-        **/
-        return null;
+
     }
-
+    private static int getSystemId(){
+        nextSystemId+=1;
+        return nextSystemId-1;
+    }
 
 }

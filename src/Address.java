@@ -1,4 +1,4 @@
-public class Address {
+public class Address{
 
     private String address;
 
@@ -14,6 +14,10 @@ public class Address {
         this.address = address;
     }
 
-//todo
-    // we asked about the attributes in the forum
+    @Override
+    public String toString() {
+        return "Address{" +
+                "address='" + address+ '\'' +
+                '}';
+    }
 }

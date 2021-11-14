@@ -163,5 +163,18 @@ public class Order {
         this.payments = payments;
     }
 
-
+    @Override
+    public String toString() {
+        return "Order{" +
+                "number='" + number + '\'' +
+                ", ordered=" + ordered +
+                ", shipped=" + shipped +
+                ", ship_to=" + ship_to +
+                ", status=" + status +
+                ", total=" + total +
+                ", account=" + account+
+                ", lineItems=" + lineItems +
+                ", payments=" + payments+
+                '}';
+    }
 }

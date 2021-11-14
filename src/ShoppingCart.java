@@ -39,6 +39,16 @@ public class ShoppingCart {
         return lineItems;
     }
 
+    @Override
+    public String toString() {
+        return "ShoppingCart{" +
+                "created=" + created +
+                ", user=" + user.getLogin_id() +
+                ", account=" + account.getId() +
+                ", lineItems=" + lineItems +
+                '}';
+    }
+
     public void setLineItems(ArrayList<LineItem> lineItems) {
         this.lineItems = lineItems;
     }
