@@ -31,6 +31,7 @@ public class PremiumAccount extends Account {
             return Status.failure;
         if (products.contains(p))
             return Status.failure;
+        p.setPremiumAccount(this);
         products.add(p);
         return Status.success;
     }

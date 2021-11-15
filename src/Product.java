@@ -19,12 +19,16 @@ public class Product {
 
     @Override
     public String toString() {
+        String l="";
+        for (LineItem lineItem: lineItems)
+            l+="["+lineItem.getProduct().getId()+", q:"+lineItem.getQuantity()+", p:"+lineItem.getPrice()+"],";
+
         return "Product{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", supplier=" + supplier.getId() +
-                ", lineItems=" + lineItems +
-                ", premiumAccount=" + premiumAccount+
+                ", lineItems=" + l +
+                ", premiumAccount=" + premiumAccount.getId()+
                 '}';
     }
 
@@ -107,4 +111,11 @@ public class Product {
         return supplier;
     }
 
+    public PremiumAccount getPremiumAccount() {
+        return premiumAccount;
+    }
+
+    public void setPremiumAccount(PremiumAccount premiumAccount) {
+        this.premiumAccount = premiumAccount;
+    }
 }

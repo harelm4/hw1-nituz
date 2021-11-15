@@ -42,11 +42,15 @@ public class ShoppingCart {
 
     @Override
     public String toString() {
+        String p="";
+        for (LineItem payment: lineItems)
+            p+="["+payment.getProduct().getId()+", q:"+payment.getQuantity()+", p:"+payment.getPrice()+"],";
+
         return "ShoppingCart{" +
                 "created=" + created +
                 ", user=" + user.getLogin_id() +
                 ", account=" + account.getId() +
-                ", lineItems=" + lineItems +
+                ", lineItems=" + p +
                 '}';
     }
 

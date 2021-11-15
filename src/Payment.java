@@ -27,8 +27,8 @@ public abstract class Payment {
                 ", paid=" + paid +
                 ", total=" + total +
                 ", details='" + details + '\'' +
-                ", account=" + account +
-                ", order=" + order +
+                ", account=" + account.getId() +
+                ", order=" + order.getNumber() +
                 '}';
     }
 
