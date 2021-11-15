@@ -2,6 +2,7 @@ public class Customer {
     private String id;
     private Address address;
 
+    private Account account;
     @Override
     public String toString() {
         return "Customer{" +

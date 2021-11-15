@@ -398,9 +398,9 @@ public class Main {
     }
 
     private static Status showObjectId(String objectId) {
-        int key=Integer.parseInt(objectId);
-        if(allInstances.keySet().contains(key))
-            System.out.println(allInstances.get(key));
+        //int key=Integer.parseInt(objectId);
+        if(allInstances.keySet().contains(objectId))
+            System.out.println(allInstances.get(objectId));
         return Status.success;
     }
 
