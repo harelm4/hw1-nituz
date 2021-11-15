@@ -7,6 +7,7 @@ public class Main {
     static ArrayList<User> users = new ArrayList<User>();
     static ArrayList<Order> orders = new ArrayList<Order>();
     static ArrayList<Product> products = new ArrayList<Product>();
+    static ArrayList<Supplier> suppliers = new ArrayList<Supplier>();
     static HashMap<Integer,Object> allInstances = new HashMap<Integer,Object>();
     static Order lastOrder;
     static  User userLoggedIn=null;
@@ -18,43 +19,24 @@ public class Main {
 
         Supplier Osem=new Supplier("Osem","Osem");
         Supplier EastWest=new Supplier("EastWest","EastWest");
+        suppliers.add(Osem);
+        suppliers.add(EastWest);
+        allInstances.put(getSystemId(),Osem);
+        allInstances.put(getSystemId(),EastWest);
+
         Product Bambaa=new Product("Bamba","Bamba", Osem);
-        //Bambaa.setSupplier(Osem);
-        //Osem.addProduct(Bambaa);
+        products.add(Bambaa);
+        allInstances.put(getSystemId(),Bambaa);
+
         Product Ramen=new Product("Ramen","Ramen", EastWest);
-        //Ramen.setSupplier(EastWest);
-        //EastWest.addProduct(Ramen);
+        products.add(Ramen);
+        allInstances.put(getSystemId(),Ramen);
 
         User user=addUser("Dani","Dani123",false,"BEER SHEVA 123","054-1234567","DANI@POST.BGU.AC.IL");
-        /**
-         Customer customer=new Customer();
-         customer.setUser(user);
-         Account normalAccount=new Account();
-         customer.setAccount(normalAccount);
-         normalAccount.setCustomer(customer);
-         ShoppingCart shoppingCart=new ShoppingCart();
-         shoppingCart.setUser(user);
-         shoppingCart.setAccount(normalAccount);
-         normalAccount.setShoppingCart(shoppingCart);
-         **/
-
         User userPremium=addUser("Dana","Dana123",true, "BEER SHEVA 124","050-1234567","DANA@POST.BGU.AC.IL");
         PremiumAccount p = (PremiumAccount) userPremium.getCustomer().getAccount();
         p.addProduct(Bambaa);
-        //(PremiumAccount (userPremium.getCustomer().getAccount()).addProduct(Bambaa);
-        //premiumAccount.setCustomer(customer);
 
-        /**
-         Customer customerPremium=new Customer();
-         customerPremium.setUser(user);
-         customerPremium.setAccount(premiumAccount);
-         premiumAccount.setCustomer(customerPremium);
-         ShoppingCart PremiumShoppingCart=new ShoppingCart();
-         PremiumShoppingCart.setUser(userPremium);
-         PremiumShoppingCart.setAccount(premiumAccount);
-         premiumAccount.setShoppingCart(PremiumShoppingCart);
-
-         **/
 
 
         Scanner myObj = new Scanner(System.in);
@@ -360,21 +342,32 @@ public class Main {
         return null;
     }
 
-    private static Status findSupplierByName(String supplierName) {
-        //todo
+    private static Supplier findSupplierByName(String supplierName) {
+        for(Supplier s: suppliers){
+            if(s.getName().equals(supplierName)){
+                return s;
+
+            }
+        }
         return null;
     }
 
     private static Status deleteProduct(String productName) {
-        //todo
+        Product p = findProductByName(productName);
+        ArrayList<LineItem> lineItems = p.getLineItems();
+        p.deleteProduct();
+
+        //removal of all products & lineItems from system
         return null;
     }
 
     //Add Product *Product_Name* *Supplier_Name*
     public static Status addProduct(String productName,String supplierName){
-        //todo
-        //
-        return null;
+        Supplier supplier = findSupplierByName(supplierName);
+        Product p = new Product(productName,productName,supplier);
+        products.add(p);
+        allInstances.put(getSystemId(),p);
+        return Status.success;
     }
 
 
@@ -404,7 +397,6 @@ public class Main {
 
         return null;
     }
-//        //todo:to complete at the end
 //        User user=findUser(id);
 //        if(user!=null){
 //            allInstances.remove(user);

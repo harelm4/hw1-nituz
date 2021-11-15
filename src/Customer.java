@@ -10,7 +10,7 @@ public class Customer {
                 ", address=" + address +
                 ", phone='" + phone + '\'' +
                 ", email='" + email + '\'' +
-                ", account=" + account+
+                ", account=" + account.getId()+
                 ", user=" + user.getLogin_id() +
                 '}';
     }

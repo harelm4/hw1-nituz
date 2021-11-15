@@ -20,10 +20,14 @@ public class Supplier {
 
     @Override
     public String toString() {
+        String p="";
+        for (Product product: products)
+            p+=product.getId()+",";
+
         return "Supplier{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
-                ", products=" + products +
+                ", products=" + p +
                 '}';
     }
 

@@ -168,6 +168,14 @@ public class Order {
 
     @Override
     public String toString() {
+        String p="";
+        for (Payment payment: payments)
+            p+=payment.getId()+",";
+
+        String l="";
+        for (LineItem lineItem: lineItems)
+            l+="["+lineItem.getProduct().getId()+", q:"+lineItem.getQuantity()+", p:"+lineItem.getPrice()+"],";
+
         return "Order{" +
                 "number='" + number + '\'' +
                 ", ordered=" + ordered +
@@ -175,9 +183,9 @@ public class Order {
                 ", ship_to=" + ship_to +
                 ", status=" + status +
                 ", total=" + total +
-                ", account=" + account+
-                ", lineItems=" + lineItems +
-                ", payments=" + payments+
+                ", account=" + account.getId()+
+                ", lineItems=" + l +
+                ", payments=" + p+
                 '}';
     }
 }
