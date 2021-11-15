@@ -73,10 +73,13 @@ public class Main {
                     System.out.println("Please enter a Password: (If you wish to have no password, please type '.')\n");
                     String UserPassword = myObj.nextLine();//fix add user function
                     System.out.println("Does the User have a Premium Account?: (Y/N) answer with capital letter, no spaces. If you type incorrectly, it won't be a premium account\n");
-                    String UserPremium = myObj.nextLine();
+                    String UserPremium = myObj.nextLine().toLowerCase();
                     boolean UserPremiumBool = false;
-                    if (UserPremium.equals("Y")) {UserPremiumBool= true; }
-                    else {UserPremiumBool= false; }
+                    if (UserPremium.equals("y")) {UserPremiumBool= true; }
+                    else if((UserPremium.equals("n"))) {UserPremiumBool= false; }
+                    else{
+                        System.out.println("invalid entry: "+UserPremium);
+                    }
                     System.out.println("Your address please:\n");
                     String address = myObj.nextLine();
                     System.out.println("Your phone number please:\n");
@@ -85,6 +88,7 @@ public class Main {
                     String email = myObj.nextLine();
 
                     addUser(UserID,UserPassword,UserPremiumBool,address, phone, email);
+                    System.out.println("user "+UserID+ " has been created successfully\n");
                     break;
                 }
                 case 2:{ //Remove user
@@ -104,6 +108,10 @@ public class Main {
                     break;
                 }
                 case 3:{ //Login user
+                    if(userLoggedIn!=null){
+                        System.out.println("Another User is already logged in!\n");
+                        break;
+                    }
                     System.out.println("Please enter a User Id you wish to log in to:\n");
                     String UserID = myObj.nextLine();
                     if (findUser(UserID) == null){
@@ -115,10 +123,14 @@ public class Main {
                         System.out.println("User successfully logged in!\n");
                         break;
                     }
-                    System.out.println("Another User is already logged in!\n");
+                    System.out.println("log in failed");
                     break;
+
                 }
                 case 4:{ //Logout user
+                    if(userLoggedIn==null){
+                        System.out.println("there is no user currently logged in");
+                    }
                     System.out.println("Please enter a User Id you wish to log in to:\n");
                     String UserID = myObj.nextLine();
                     if (findUser(UserID) == null){
@@ -132,10 +144,17 @@ public class Main {
                     break;
                 }
                 case 5:{ //Create new order
+                    if(userLoggedIn==null){
+                        System.out.println("Order creation failed,there is no logged in user\n");
+                        break;
+                    }
                     System.out.println("Please enter an address:\n");
                     String UserAddress= myObj.nextLine();
 
                     int OrderId = createNewOrder(UserAddress);
+                    if(OrderId==-1){
+                        break;
+                    }
                     System.out.println("Order Number is: "+ OrderId+"\n");
                     break;
                 }
@@ -152,13 +171,26 @@ public class Main {
                         System.out.println("User ID doesn't exist!\n");
                         break;
                     }
+                    if(!(findUser(UserID).getCustomer().getAccount() instanceof PremiumAccount)){
+                        System.out.println(UserID+" is not a premium account\n");
+                        break;
+                    }
+                    //todo: see if we should do that
+                    if(UserID.equals(userLoggedIn.getLogin_id())){
+                        System.out.println("you cant order products from yourself");
+                    }
                     System.out.println("Enter a product name the User wishes to buy:\n");
                     String ProductName = myObj.nextLine();
+                    if(findProductByName(ProductName)==null){
+                        System.out.println(ProductName+" Doesn't exist!\n");
+                        break;
+                    }
                     if (addProductToOrder(OrderID,UserID,ProductName)== Status.success){
                         System.out.println(ProductName+" has been successfully added to Order " + OrderID +" !\n");
                         break;
                     }
-                    System.out.println(ProductName+" Doesn't exist!\n");
+
+
                     break;
                 }
                 case 7:{ //Display order
@@ -166,10 +198,22 @@ public class Main {
                         System.out.println("User state is currently closed!\n");
                         break;
                     }
+                    break;
+
                 }
                 case 8:{ //Link Product
-
-
+                    System.out.println("Please enter product name:\n");
+                    String productName = myObj.nextLine();
+                    System.out.println("Please enter price:\n");
+                    String price = myObj.nextLine();
+                    System.out.println("Please enter supplier name:\n");
+                    String supplierName = myObj.nextLine();
+//                    if(linkProduct(productName,price,supplierName)==Status.success){
+//                        System.out.println(productName+" linked successfully to"+userLoggedIn+"'s account");
+//                        break;
+//                    }
+                    System.out.println("link failed");
+                    break;
                 }
                 case 9:{ //Add Product
                     System.out.println("Please enter a product name you wish to add:\n");
@@ -268,7 +312,7 @@ public class Main {
     public static Status loginUser(String id,String password){
         if(userLoggedIn==null){
             User u=findUser(id);
-            if (u!=null && users.contains(u) && u.getPassword()==password){
+            if (u!=null && u.getPassword().equals(password)){
                 userLoggedIn=u;
                 return Status.success;
             }
@@ -276,18 +320,15 @@ public class Main {
         return Status.failure;
     }
     public static Status logOut(String id){
-        if(id== userLoggedIn.getLogin_id()){
+        if(id.equals(userLoggedIn.getLogin_id())){
             userLoggedIn=null;
             return Status.success;
         }
         return Status.failure;
     }
     public static int createNewOrder(String address){
-        if(userLoggedIn==null){
-            return -1;
-        }
+
         Address addressObj=new Address(address);
-        allInstances.put(getSystemId(),addressObj);
         Order order=new Order(String.valueOf(nextOrderNumber), LocalDateTime.now(),addressObj,OrderStatus.New, userLoggedIn.getCustomer().getAccount());
         allInstances.put(getSystemId(),order);
         orders.add(order);
@@ -304,12 +345,12 @@ public class Main {
             return Status.failure;
         Order lastOrder=userLoggedIn.getCustomer().getAccount().getOrders().peek();
         System.out.println(
-                "Order Number: "+ lastOrder.getNumber()
-                        +"Order Date:"+ lastOrder.getOrdered()
-                        +"Order Shipping Date:"+lastOrder.getShipped()
-                        +"Order Adress:"+lastOrder.getShip_to().getAddress()
-                        +"Order Status:"+lastOrder.getStatus().name()
-                        +"Order total Payment"+lastOrder.getSumOfPayments()
+                "Order Number: "+ lastOrder.getNumber()+"\n"
+                        +"Order Date:"+ lastOrder.getOrdered()+"\n"
+                        +"Order Shipping Date:"+lastOrder.getShipped()+"\n"
+                        +"Order Address:"+lastOrder.getShip_to().getAddress()+"\n"
+                        +"Order Status:"+lastOrder.getStatus().name()+"\n"
+                        +"Order total Payment"+lastOrder.getSumOfPayments()+"\n"
         );
         return Status.success;
     }
@@ -357,9 +398,22 @@ public class Main {
         ArrayList<LineItem> lineItems = p.getLineItems();
         p.deleteProduct();
 
+
         //removal of all products & lineItems from system
-        return null;
+
+        int size = allInstances.size();
+        for (int i = 0; i < size; i++) {
+            try {
+                allInstances.get(i).toString(); //if null pointer exception means that there is no printing because of deleting all associations
+            } catch (NullPointerException e) {
+                allInstances.remove(i);
+            }
+//todo:ask adi why did he do next line (caused a bug)
+//            return Status.failure;
+        }
+        return Status.success;
     }
+
 
     //Add Product *Product_Name* *Supplier_Name*
     public static Status addProduct(String productName,String supplierName){
@@ -371,50 +425,30 @@ public class Main {
     }
 
 
-    public static Status removeUser(User user) {
 
+    public static Status removeUser(User user) {
+        if(userLoggedIn!=null && user.getLogin_id().equals(userLoggedIn.getLogin_id())){
+            System.out.println("cant remove user while logged in to same user");//assumption
+            return Status.failure;
+        }
         ShoppingCart shoppingCart = user.getShoppingCart();
         Customer customer = user.getCustomer();
         Account account = customer.getAccount();
         ArrayList<LineItem> lineItems = shoppingCart.getLineItems();
         user.remove();
-        /**
-        customer.remove();
-        account.remove();
-        for (LineItem lineItem: lineItems)
-        {
-            lineItem.remove();
-        }
-         **/
         users.remove(user);
-        Collection v = allInstances.values();
-        for (Object value: v)
-        {
-            if (value==shoppingCart);
+        int size = allInstances.size();
+        for (int i = 0; i < size; i++) {
+            try {
+                allInstances.get(i).toString();
+            } catch (NullPointerException e) {
+                allInstances.remove(i);
+            }
+
+
         }
-
-
-
-        return null;
+        return Status.success;
     }
-//        User user=findUser(id);
-//        if(user!=null){
-//            allInstances.remove(user);
-//            allInstances.remove(user.getCustomer());
-//            allInstances.remove(user.getCustomer().getAccont());
-//            if(user.getCustomer().getAccont().getOrders().leangth != 0){
-//                allInstances.removeAll(user.getCustomer().getAccont().getOrders());
-//            }
-//            if(user.getShoppingCart() != null){
-//                allInstances.remove(user.getShoppingCart());
-//                if(user.getShoppingCart.leangth != 0){
-//                    allInstances.removeAll(user.getCustomer().getAccont().getOrders());
-//                }
-//            }
-//
-//        }
-//    }
-
     private static Status showAllObjects() {
         //printing the memory address of each object
         for (Integer name: allInstances.keySet()) {
@@ -427,20 +461,32 @@ public class Main {
     }
 
     private static Status showObjectId(String objectId) {
-        //int key=Integer.parseInt(objectId);
-        if(allInstances.keySet().contains(objectId))
-            System.out.println(allInstances.get(objectId));
-        return Status.success;
+        int key=Integer.parseInt(objectId);
+        if(allInstances.containsKey(key)){
+            System.out.println(allInstances.get(key));
+            return Status.success;
+        }
+        System.out.println(objectId+" does not exist in the system\n");
+        return Status.failure;
+
+
     }
 
     //Add product to order *Order_ID* *Login_ID* *Product Name*
     public static Status addProductToOrder(String orderId,String userId,String productName){
-        //todo
+
         Order order=findOrder(orderId);
         //delete order from userId product list
         Account acc=findUser(userId).getCustomer().getAccount();
+        Product p = findProductByName(productName);
         if(acc instanceof PremiumAccount){
-            ((PremiumAccount) acc).delProduct(findProductByName(productName));
+            //((PremiumAccount) acc).delProduct(findProductByName(productName));
+
+            LineItem newLineItem = new LineItem(userLoggedIn.getShoppingCart(), order,p);
+            newLineItem.setQuantity(1);
+            newLineItem.setPrice(p.getPrice()*1);
+            allInstances.put(getSystemId(),newLineItem);
+
         }
         else{
             return Status.failure;
@@ -450,9 +496,8 @@ public class Main {
 //        LineItem productLineItem=findProductByName(productName).getLineItems();
         return Status.success;
 
-
-
     }
+
     private static int getSystemId(){
         nextSystemId+=1;
         return nextSystemId-1;

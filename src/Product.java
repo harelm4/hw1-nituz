@@ -8,6 +8,8 @@ public class Product {
     private Supplier supplier;
     private ArrayList<LineItem> lineItems;
     private PremiumAccount premiumAccount;
+    private int price;
+    private int totalAvailableQuantity;
 
     public Product(String id, String name, Supplier supplier) {
         lineItems=new ArrayList<>();
@@ -15,6 +17,34 @@ public class Product {
         this.name = name;
         this.supplier = supplier;
         supplier.addProduct(this);
+        this.price=10; //default
+        this.totalAvailableQuantity=10; //default
+    }
+
+    public Product(String id, String name, Supplier supplier, int Price, int totalAvailableQuantity) {
+        lineItems=new ArrayList<>();
+        this.id = id;
+        this.name = name;
+        this.supplier = supplier;
+        supplier.addProduct(this);
+        this.price=Price;
+        this.totalAvailableQuantity=totalAvailableQuantity;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public int getTotalAvailableQuantity() {
+        return totalAvailableQuantity;
+    }
+
+    public void setTotalAvailableQuantity(int totalAvailableQuantity) {
+        this.totalAvailableQuantity = totalAvailableQuantity;
     }
 
     @Override
@@ -23,22 +53,29 @@ public class Product {
         for (LineItem lineItem: lineItems)
             l+="["+lineItem.getProduct().getId()+", q:"+lineItem.getQuantity()+", p:"+lineItem.getPrice()+"],";
 
+        String pra="";
+        if (premiumAccount!=null)
+            pra=premiumAccount.getId();
         return "Product{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", supplier=" + supplier.getId() +
                 ", lineItems=" + l +
-                ", premiumAccount=" + premiumAccount.getId()+
+                ", premiumAccount=" + pra+
+                ", price=" +price+
+                ", totalAvailableQuantity="+totalAvailableQuantity+
                 '}';
     }
+
 
     public void deleteProduct()
     {
         supplier.delProduct(this);
         supplier=null;
-        premiumAccount.delProduct(this);
-        premiumAccount=null;
-
+        if(premiumAccount!=null){
+            premiumAccount.delProduct(this);
+            premiumAccount=null;
+        }
         int i=0;
         for (i=0; i<lineItems.size(); i++)
         {

@@ -21,7 +21,21 @@ public class PremiumAccount extends Account {
 
     @Override
     public String toString() {
+        String p="";
+        for (Payment payment: payments)
+            p+=payment.getId()+",";
+
         return "PremiumAccount{" +
+                "id='" + id + '\'' +
+                ", billing_address='" + billing_address + '\'' +
+                ", is_closed=" + is_closed +
+                ", open=" + open +
+                ", closed=" + closed +
+                ", balance=" + balance +
+                ", orders=" + orders +
+                ", payments=" + p+
+                ", customer=" + customer.getId() +
+                ", shoppingCart=" + shoppingCart +
                 "products=" + products +
                 '}';
     }

@@ -5,13 +5,17 @@ public class Customer {
     private Account account;
     @Override
     public String toString() {
+        String pra="";
+        if (user!=null)
+            pra=user.getLogin_id();
+
         return "Customer{" +
                 "id='" + id + '\'' +
                 ", address=" + address +
                 ", phone='" + phone + '\'' +
                 ", email='" + email + '\'' +
                 ", account=" + account.getId()+
-                ", user=" + user.getLogin_id() +
+                ", user=" + pra +
                 '}';
     }
 

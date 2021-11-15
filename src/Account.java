@@ -10,10 +10,10 @@ public class Account {
         public Date closed;
         public int balance;
         //shold be stack to support command no.7
-        private Stack<Order> orders=new Stack<Order>();
-        private ArrayList<Payment> payments = new ArrayList<Payment>();
-        private Customer customer;
-        private ShoppingCart shoppingCart;
+        protected Stack<Order> orders=new Stack<Order>();
+        protected ArrayList<Payment> payments = new ArrayList<Payment>();
+        protected Customer customer;
+        protected ShoppingCart shoppingCart;
 
 
         @Override
