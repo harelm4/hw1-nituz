@@ -1,4 +1,5 @@
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -11,10 +12,12 @@ public class Order {
     private float total;
 
     private Account account;
-    private List<LineItem> lineItems;
-    private List<Payment>  payments;
+    private ArrayList<LineItem> lineItems;
+    private ArrayList<Payment>  payments;
 
     public Order(String number, LocalDateTime ordered, Address ship_to, OrderStatus status, Account account) {
+        lineItems=new ArrayList<>();
+        payments=new ArrayList<>();
         this.number = number;
         this.ordered = ordered;
         this.ship_to = ship_to;
@@ -147,19 +150,19 @@ public class Order {
         this.account = account;
     }
 
-    public List<LineItem> getLineItems() {
+    public ArrayList<LineItem> getLineItems() {
         return lineItems;
     }
 
-    public void setLineItems(List<LineItem> lineItems) {
+    public void setLineItems(ArrayList<LineItem> lineItems) {
         this.lineItems = lineItems;
     }
 
-    public List<Payment> getPayments() {
+    public ArrayList<Payment> getPayments() {
         return payments;
     }
 
-    public void setPayments(List<Payment> payments) {
+    public void setPayments(ArrayList<Payment> payments) {
         this.payments = payments;
     }
 

@@ -8,6 +8,7 @@ public class ShoppingCart {
     private ArrayList<LineItem> lineItems;
 
     public ShoppingCart(Date created) {
+        lineItems=new ArrayList<>();
         this.created = created;
     }
 

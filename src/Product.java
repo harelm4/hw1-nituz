@@ -10,6 +10,7 @@ public class Product {
     private PremiumAccount premiumAccount;
 
     public Product(String id, String name, Supplier supplier) {
+        lineItems=new ArrayList<>();
         this.id = id;
         this.name = name;
         this.supplier = supplier;

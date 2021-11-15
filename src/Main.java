@@ -25,7 +25,7 @@ public class Main {
         //Ramen.setSupplier(EastWest);
         //EastWest.addProduct(Ramen);
 
-        User user=addUser("Dani","Dani123",false,"BEER SHEVA 123");
+        User user=addUser("Dani","Dani123",false,"BEER SHEVA 123","054-1234567","DANI@POST.BGU.AC.IL");
         /**
          Customer customer=new Customer();
          customer.setUser(user);
@@ -38,7 +38,7 @@ public class Main {
          normalAccount.setShoppingCart(shoppingCart);
          **/
 
-        User userPremium=addUser("Dana","Dana123",true, "BEER SHEVA 124");
+        User userPremium=addUser("Dana","Dana123",true, "BEER SHEVA 124","050-1234567","DANA@POST.BGU.AC.IL");
         PremiumAccount p = (PremiumAccount) userPremium.getCustomer().getAccount();
         p.addProduct(Bambaa);
         //(PremiumAccount (userPremium.getCustomer().getAccount()).addProduct(Bambaa);
@@ -90,19 +90,27 @@ public class Main {
                     }
                     System.out.println("Please enter a Password: (If you wish to have no password, please type '.')\n");
                     String UserPassword = myObj.nextLine();//fix add user function
-                    System.out.println("Does the User have a Premium Account?: (Y/N)\n");
+                    System.out.println("Does the User have a Premium Account?: (Y/N) answer with capital letter, no spaces. If you type incorrectly, it won't be a premium account\n");
                     String UserPremium = myObj.nextLine();
                     boolean UserPremiumBool = false;
                     if (UserPremium.equals("Y")) {UserPremiumBool= true; }
-                    if (UserPremium.equals("N")) {UserPremiumBool= false; }
-                    addUser(UserID,UserPassword,UserPremiumBool,"TEL AVIV 1234");
+                    else {UserPremiumBool= false; }
+                    System.out.println("Your address please:\n");
+                    String address = myObj.nextLine();
+                    System.out.println("Your phone number please:\n");
+                    String phone = myObj.nextLine();
+                    System.out.println("Your email please:\n");
+                    String email = myObj.nextLine();
+
+                    addUser(UserID,UserPassword,UserPremiumBool,address, phone, email);
                     break;
                 }
                 case 2:{ //Remove user
                     System.out.println("Please enter a User Id you wish to remove:\n");
                     String UserID = myObj.nextLine();
-                    if (findUser(UserID) != null) {
-                        if (removeUser(UserID) == Status.success){
+                    User userToRemove = findUser(UserID);
+                    if (userToRemove != null) {
+                        if (removeUser(userToRemove) == Status.success){
                             System.out.println("User removed successfully.\n");
                             break;
                         }
@@ -238,18 +246,22 @@ public class Main {
 
 
 
-    public static User addUser(String id,String password,boolean isPremiumAccount, String address){
-        ShoppingCart shoppingCart=new ShoppingCart(new Date(2021,1,1));
-
+    public static User addUser(String id,String password,boolean isPremiumAccount, String address, String phone, String email){
+        ShoppingCart shoppingCart=new ShoppingCart(new Date());
         Account account;
-        if(isPremiumAccount) account=new PremiumAccount(id,"Beer Sheva",false,new Date(2020,1,1),null,5);
-        else account=new Account(id,"Beer Sheva",false,new Date(2020,1,1),null,5);
 
-        Customer customer=new Customer(id,new Address(address),"054-1234567","bgu@post.com");
+        if(isPremiumAccount) account=new PremiumAccount(id,address,false,new Date(),null,5);
+        else account=new Account(id,address,false,new Date(),null,5);
+
+        Customer customer=new Customer(id,new Address(address),phone,email);
+        User user = new User(id,password,UserState.New);
 
         allInstances.put(getSystemId(),shoppingCart);
         allInstances.put(getSystemId(),customer);
         allInstances.put(getSystemId(),account);
+        allInstances.put(getSystemId(),user);
+        users.add(user);
+
         //shopping cart->account
         shoppingCart.setAccount(account);
         //account->customer
@@ -259,7 +271,6 @@ public class Main {
         //account->shopping cart
         account.setShoppingCart(shoppingCart);
         //creating a new user
-        User user = new User(id,password,UserState.New);
         //user->customer
         user.setCustomer(customer);
         //customer->user
@@ -270,8 +281,6 @@ public class Main {
         //user->shopping cart
         user.setShoppingCart(shoppingCart);
 
-        allInstances.put(getSystemId(),user);
-        users.add(user);
         return user;
     }
     public static Status loginUser(String id,String password){
@@ -325,7 +334,7 @@ public class Main {
 
     private static User findUser(String id){
         for(User u:users){
-            if(u.getLogin_id()==id){
+            if(u.getLogin_id().equals(id)){
                 return u;
 
             }
@@ -334,7 +343,7 @@ public class Main {
     }
     private static  Order findOrder(String id){
         for(Order o:orders){
-            if(o.getNumber()==id){
+            if(o.getNumber().equals(id)){
                 return o;
 
             }
@@ -343,7 +352,7 @@ public class Main {
     }
     private static  Product findProductByName(String n){
         for(Product p:products){
-            if(p.getName()==n){
+            if(p.getName().equals(n)){
                 return p;
 
             }
@@ -369,7 +378,30 @@ public class Main {
     }
 
 
-    public static Status removeUser(String id) {
+    public static Status removeUser(User user) {
+
+        ShoppingCart shoppingCart = user.getShoppingCart();
+        Customer customer = user.getCustomer();
+        Account account = customer.getAccount();
+        ArrayList<LineItem> lineItems = shoppingCart.getLineItems();
+        user.remove();
+        /**
+        customer.remove();
+        account.remove();
+        for (LineItem lineItem: lineItems)
+        {
+            lineItem.remove();
+        }
+         **/
+        users.remove(user);
+        Collection v = allInstances.values();
+        for (Object value: v)
+        {
+            if (value==shoppingCart);
+        }
+
+
+
         return null;
     }
 //        //todo:to complete at the end
@@ -393,7 +425,12 @@ public class Main {
 
     private static Status showAllObjects() {
         //printing the memory address of each object
-        System.out.println(allInstances.keySet());
+        for (Integer name: allInstances.keySet()) {
+            String key = name.toString();
+            String value = allInstances.get(name).toString();
+            System.out.println("ID: "+key + ", value: " + value);
+        }
+
         return Status.success;
     }
 
