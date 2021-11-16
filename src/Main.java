@@ -206,12 +206,27 @@ public class Main {
                     String productName = myObj.nextLine();
                     System.out.println("Please enter price:\n");
                     String price = myObj.nextLine();
-                    System.out.println("Please enter supplier name:\n");
-                    String supplierName = myObj.nextLine();
-//                    if(linkProduct(productName,price,supplierName)==Status.success){
-//                        System.out.println(productName+" linked successfully to"+userLoggedIn+"'s account");
-//                        break;
-//                    }
+                    System.out.println("Please enter quantity:\n");
+                    String quantity = myObj.nextLine();
+                    if (userLoggedIn.getCustomer().getAccount() instanceof PremiumAccount)
+                    {
+                        try{
+                            if(linkProduct(productName,Integer.parseInt(price),Integer.parseInt(quantity))==Status.success){
+                                System.out.println(productName+" linked successfully to"+userLoggedIn+"'s account");
+                                break;
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            System.out.println("Enter integer values for price & quantity");
+                        }
+
+
+                    }
+                    else
+                    {
+                        System.out.println("Currently not a premium account. Link failed");
+                    }
                     System.out.println("link failed");
                     break;
                 }
@@ -270,6 +285,14 @@ public class Main {
         }
     }
 
+    private static Status linkProduct(String productName, int price, int quantity) {
+        Product p = findProductByName(productName);
+        p.setPrice(price);
+        p.setTotalAvailableQuantity(quantity);
+        PremiumAccount pa = (PremiumAccount) (userLoggedIn.getCustomer().getAccount());
+        pa.addProduct(p);
+        return Status.success;
+    }
 
 
     public static User addUser(String id,String password,boolean isPremiumAccount, String address, String phone, String email){
@@ -461,13 +484,21 @@ public class Main {
     }
 
     private static Status showObjectId(String objectId) {
-        int key=Integer.parseInt(objectId);
-        if(allInstances.containsKey(key)){
-            System.out.println(allInstances.get(key));
-            return Status.success;
+        try {
+            int key = Integer.parseInt(objectId);
+            if (allInstances.containsKey(key)) {
+                System.out.println(allInstances.get(key));
+                return Status.success;
+            }
+
+
+            System.out.println(objectId + " does not exist in the system\n");
+            return Status.failure;
+        }catch (NumberFormatException e){
+            System.out.println(objectId + " is not a number id in the system\n");
+            return Status.failure;
+
         }
-        System.out.println(objectId+" does not exist in the system\n");
-        return Status.failure;
 
 
     }
