@@ -19,7 +19,11 @@ public class LineItem {
 
     public LineItem(ShoppingCart shoppingCart, Order order, Product product, int price,int quantity)
     {
-        this.quantity=quantity;
+        if (product.getTotalAvailableQuantity()<quantity) {
+            System.out.println("ERROR: THERE IS NOT ENOUGH FROM THAT PRODUCT");
+            return;
+        }
+            this.quantity=quantity;
         this.price=price;
         this.shoppingCart=shoppingCart;
         shoppingCart.addLineItem(this);

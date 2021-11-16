@@ -18,7 +18,7 @@ public class Product {
         this.supplier = supplier;
         supplier.addProduct(this);
         this.price=10; //default
-        this.totalAvailableQuantity=10; //default
+        this.totalAvailableQuantity=1000; //default
     }
 
     public Product(String id, String name, Supplier supplier, int Price, int totalAvailableQuantity) {

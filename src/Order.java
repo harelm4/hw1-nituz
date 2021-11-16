@@ -31,12 +31,14 @@ public class Order {
             return Status.failure;
         if (lineItems.contains(li))
             return Status.failure;
+
         lineItems.add(li);
         total+=li.getPrice()*li.getQuantity();
         return Status.success;
     }
 
     public void delLineItem(LineItem li){
+        total-=li.getPrice()*li.getQuantity();
         lineItems.remove(li);
     }
 

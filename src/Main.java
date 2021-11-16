@@ -64,6 +64,10 @@ public class Main {
             inputValue = Integer.parseInt(OpNumber);
             switch(inputValue){
                 case 1:{ //Add user
+                    if (userLoggedIn!=null) {
+                        System.out.println("User logged in. Logout first");
+                        break;
+                    }
                     System.out.println("Please enter a User Id you wish to add:\n");
                     String UserID = myObj.nextLine();
                     if (findUser(UserID) != null){
@@ -165,6 +169,10 @@ public class Main {
                     break;
                 }
                 case 6:{ //Add product to order
+                    if (userLoggedIn==null) {
+                        System.out.println("No user logged in. Login first");
+                        break;
+                    }
                     System.out.println("Please enter an Order Id:\n");
                     String OrderID = myObj.nextLine();
                     if (findOrder(OrderID) == null){
@@ -201,6 +209,10 @@ public class Main {
                     break;
                 }
                 case 7:{ //Display order
+                    if (userLoggedIn==null) {
+                        System.out.println("No user logged in. Login first");
+                        break;
+                    }
                     if (DisplayOrder() == Status.failure){
                         System.out.println("User state is currently closed!\n");
                         break;
@@ -209,6 +221,14 @@ public class Main {
 
                 }
                 case 8:{ //Link Product
+                    if(userLoggedIn==null){
+                        System.out.println("User should be logged in:\n");
+                        break;
+                    }
+                    if (userLoggedIn.getCustomer().getAccount() instanceof PremiumAccount) {
+                        System.out.println("User currently logged in is not a PremiumAccount");
+                        break;
+                    }
                     System.out.println("Please enter product name:\n");
                     String productName = myObj.nextLine();
                     System.out.println("Please enter price:\n");
@@ -373,6 +393,7 @@ public class Main {
 
 
     public static Status DisplayOrder(){
+
         if(userLoggedIn.getState()==UserState.Closed)
             return Status.failure;
         Order lastOrder=userLoggedIn.getCustomer().getAccount().getOrders().peek();
