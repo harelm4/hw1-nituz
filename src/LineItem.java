@@ -17,14 +17,17 @@ public class LineItem {
                 '}';
     }
 
-    public LineItem(ShoppingCart shoppingCart, Order order, Product product)
+    public LineItem(ShoppingCart shoppingCart, Order order, Product product, int price,int quantity)
     {
+        this.quantity=quantity;
+        this.price=price;
         this.shoppingCart=shoppingCart;
         shoppingCart.addLineItem(this);
         this.product=product;
         product.addLineItem(this);
         this.order=order;
         order.addLineItem(this);
+
     }
 
     public void shoppingCartWasDeleted() {

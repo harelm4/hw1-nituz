@@ -79,6 +79,7 @@ public class Main {
                     else if((UserPremium.equals("n"))) {UserPremiumBool= false; }
                     else{
                         System.out.println("invalid entry: "+UserPremium);
+                        break;
                     }
                     System.out.println("Your address please:\n");
                     String address = myObj.nextLine();
@@ -115,6 +116,7 @@ public class Main {
                     System.out.println("Please enter a User Id you wish to log in to:\n");
                     String UserID = myObj.nextLine();
                     if (findUser(UserID) == null){
+                        System.out.println("User doesn't exist\n");
                         break;
                     }
                     System.out.println("Please enter a Password: (If User has no password, please type '.')\n");
@@ -130,6 +132,7 @@ public class Main {
                 case 4:{ //Logout user
                     if(userLoggedIn==null){
                         System.out.println("there is no user currently logged in");
+                        break;
                     }
                     System.out.println("Please enter a User Id you wish to log in to:\n");
                     String UserID = myObj.nextLine();
@@ -140,8 +143,11 @@ public class Main {
                         System.out.println("User successfully logged out!\n");
                         break;
                     }
-                    System.out.println("Current User id isn't "+ UserID +" !\n");
-                    break;
+                    else
+                    {
+                        System.out.println("Current User id isn't "+ UserID +" !\n");
+                        break;
+                    }
                 }
                 case 5:{ //Create new order
                     if(userLoggedIn==null){
@@ -178,6 +184,7 @@ public class Main {
                     //todo: see if we should do that
                     if(UserID.equals(userLoggedIn.getLogin_id())){
                         System.out.println("you cant order products from yourself");
+                        break;
                     }
                     System.out.println("Enter a product name the User wishes to buy:\n");
                     String ProductName = myObj.nextLine();
@@ -219,6 +226,7 @@ public class Main {
                         catch (Exception e)
                         {
                             System.out.println("Enter integer values for price & quantity");
+                            break;
                         }
 
 
@@ -226,6 +234,7 @@ public class Main {
                     else
                     {
                         System.out.println("Currently not a premium account. Link failed");
+                        break;
                     }
                     System.out.println("link failed");
                     break;
@@ -373,7 +382,7 @@ public class Main {
                         +"Order Shipping Date:"+lastOrder.getShipped()+"\n"
                         +"Order Address:"+lastOrder.getShip_to().getAddress()+"\n"
                         +"Order Status:"+lastOrder.getStatus().name()+"\n"
-                        +"Order total Payment"+lastOrder.getSumOfPayments()+"\n"
+                        +"Order total: "+lastOrder.getTotal()+"\n"
         );
         return Status.success;
     }
@@ -513,9 +522,7 @@ public class Main {
         if(acc instanceof PremiumAccount){
             //((PremiumAccount) acc).delProduct(findProductByName(productName));
 
-            LineItem newLineItem = new LineItem(userLoggedIn.getShoppingCart(), order,p);
-            newLineItem.setQuantity(1);
-            newLineItem.setPrice(p.getPrice()*1);
+            LineItem newLineItem = new LineItem(userLoggedIn.getShoppingCart(), order,p,1,10);
             allInstances.put(getSystemId(),newLineItem);
 
         }

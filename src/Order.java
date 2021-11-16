@@ -32,6 +32,7 @@ public class Order {
         if (lineItems.contains(li))
             return Status.failure;
         lineItems.add(li);
+        total+=li.getPrice()*li.getQuantity();
         return Status.success;
     }
 

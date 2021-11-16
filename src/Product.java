@@ -153,7 +153,7 @@ public class Product {
     }
 
     public void setPremiumAccount(PremiumAccount premiumAccount) {
-        if (premiumAccount!=null)
+        if (this.premiumAccount!=null)
             this.premiumAccount.delProduct(this); //when setting new premium account when old one exists -> delete the previus association. this is described in our pdf assumptions
         this.premiumAccount=premiumAccount;
     }
