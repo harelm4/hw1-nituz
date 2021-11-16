@@ -40,6 +40,14 @@ public class User {
     public void remove()
     {
         customer.removeUser();
+        if (customer.getAccount() instanceof PremiumAccount)
+        {
+            PremiumAccount p = (PremiumAccount) customer.getAccount();
+            for(Product product : p.getProducts())
+            {
+                product.setPremiumAccount(null);
+            }
+        }
         customer=null;
         shoppingCart.userwasdeleted(); //if no user -> no shopping cart
         shoppingCart=null;
