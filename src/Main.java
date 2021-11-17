@@ -480,7 +480,7 @@ public class Main {
         Product p = findProductByName(productName);
         ArrayList<LineItem> lineItems = p.getLineItems();
         p.deleteProduct();
-
+        products.remove(productName);
 
         //removal of all products & lineItems from system
 
