@@ -479,6 +479,10 @@ public class Main {
     private static Status deleteProduct(String productName) {
         Product p = findProductByName(productName);
         ArrayList<LineItem> lineItems = p.getLineItems();
+        for (LineItem lineItem: lineItems)
+        {
+            lineItem.productWasDeleted();
+        }
         p.deleteProduct();
         products.remove(productName);
 
