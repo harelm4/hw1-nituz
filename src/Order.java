@@ -38,6 +38,7 @@ public class Order {
              this.payments) {
             if(p.getAccount()==this.account)
                 p.total=total;
+                p.getAccount().balance-=total;
 
         }
         return Status.success;
