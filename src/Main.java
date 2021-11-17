@@ -5,7 +5,7 @@ import java.util.*;
 
 public class Main {
     static ArrayList<User> users = new ArrayList<User>();
-    static ArrayList<Order> orders = new ArrayList<Order>();
+    static HashMap<Integer,Order> orders = new HashMap<Integer, Order>();
     static ArrayList<Product> products = new ArrayList<Product>();
     static ArrayList<Supplier> suppliers = new ArrayList<Supplier>();
     static HashMap<Integer,Object> allInstances = new HashMap<Integer,Object>();
@@ -162,6 +162,14 @@ public class Main {
                     String UserAddress= myObj.nextLine();
 
                     int OrderId = createNewOrder(UserAddress);
+
+                    System.out.println("Would you like delayed payment?[Y/N]\n");
+                    String pay = myObj.nextLine();
+                    if(pay.equals("Y"))
+                        CreatePayment(user,OrderId,true);
+                    else
+                        CreatePayment(user,OrderId,false);
+
                     if(OrderId==-1){
                         break;
                     }
@@ -179,6 +187,7 @@ public class Main {
                         System.out.println("Order doesn't exist!\n");
                         break;
                     }
+
                     System.out.println("Please enter User login Id:\n");
                     String UserID = myObj.nextLine();//fix add user function
                     if (findUser(UserID) == null){
@@ -314,6 +323,27 @@ public class Main {
         }
     }
 
+    private static void CreatePayment(User user, int orderId,boolean isDelayed) {
+            Payment payment;
+            Date date=java.util.Calendar.getInstance().getTime();
+            int totalpayment=0;
+            int id=getSystemId();
+            for(int i=0;i<orders.get(orderId).getLineItems().size();i++){
+                totalpayment=orders.get(orderId).getLineItems().get(i).price;
+            }
+            if(isDelayed){
+                payment=new DelayedPayment(""+id,date,totalpayment,orders.get(orderId).toString(),user.getCustomer().getAccount(),orders.get(orderId));
+                orders.get(orderId).addPayment(payment);
+            }
+            else{
+                payment=new ImmediatePayment(""+id,date,totalpayment,orders.get(orderId).toString(),user.getCustomer().getAccount(),orders.get(orderId));
+                orders.get(orderId).addPayment(payment);
+            }
+            allInstances.put(id,payment);
+
+
+    }
+
     private static Status linkProduct(String productName, int price, int quantity) {
         Product p = findProductByName(productName);
         p.setPrice(price);
@@ -383,7 +413,7 @@ public class Main {
         Address addressObj=new Address(address);
         Order order=new Order(String.valueOf(nextOrderNumber), LocalDateTime.now(),addressObj,OrderStatus.New, userLoggedIn.getCustomer().getAccount());
         allInstances.put(getSystemId(),order);
-        orders.add(order);
+        orders.put(nextOrderNumber,order);
         //userLoggedIn.getCustomer().getAccount().addOrder(order);
         nextOrderNumber+=1;
         return nextOrderNumber-1;
@@ -418,7 +448,7 @@ public class Main {
         return null;
     }
     private static  Order findOrder(String id){
-        for(Order o:orders){
+        for(Order o:orders.values()){
             if(o.getNumber().equals(id)){
                 return o;
 

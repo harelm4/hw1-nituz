@@ -34,6 +34,12 @@ public class Order {
 
         lineItems.add(li);
         total+=li.getPrice()*li.getQuantity();
+        for (Payment p:
+             this.payments) {
+            if(p.getAccount()==this.account)
+                p.total=total;
+
+        }
         return Status.success;
     }
 
