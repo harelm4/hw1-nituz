@@ -51,24 +51,34 @@ public class Order {
 
     public void remove()
     {
+        int j=0;
+        for (j=0; j<payments.size(); j++)
+        {
+            payments.get(j).orderWasDeleted();
+        }
+        payments=null;
+        account.deleteOrder(this);
+
+        account=null;
+
         int i=0;
         for (i=0; i<lineItems.size(); i++)
         {
             lineItems.get(i).orderWasDeleted();
         }
         lineItems=null;
-        account.deleteOrder(this);
-        account=null;
 
-        int j=0;
-        for (j=0; j<payments.size(); j++)
-        {
-            payments.get(i).orderWasDeleted();
-        }
-        payments=null;
+
     }
 
     public void accountWasDeleted() {
+        int j=0;
+        for (j=0; j<payments.size(); j++)
+        {
+            payments.get(j).orderWasDeleted();
+        }
+        payments=null;
+
         int i=0;
         for (i=0; i<lineItems.size(); i++)
         {
@@ -77,14 +87,6 @@ public class Order {
         lineItems=null;
         //account.deleteOrder(this);
         account=null;
-
-        int j=0;
-        for (j=0; j<payments.size(); j++)
-        {
-            payments.get(i).orderWasDeleted();
-        }
-        payments=null;
-
     }
 
 

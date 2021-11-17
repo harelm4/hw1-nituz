@@ -332,11 +332,11 @@ public class Main {
                 totalpayment=orders.get(orderId).getLineItems().get(i).price;
             }
             if(isDelayed){
-                payment=new DelayedPayment(""+id,date,totalpayment,orders.get(orderId).toString(),user.getCustomer().getAccount(),orders.get(orderId));
+                payment=new DelayedPayment(""+id,date,totalpayment,orders.get(orderId).getNumber(),user.getCustomer().getAccount(),orders.get(orderId));
                 orders.get(orderId).addPayment(payment);
             }
             else{
-                payment=new ImmediatePayment(""+id,date,totalpayment,orders.get(orderId).toString(),user.getCustomer().getAccount(),orders.get(orderId));
+                payment=new ImmediatePayment(""+id,date,totalpayment,orders.get(orderId).getNumber(),user.getCustomer().getAccount(),orders.get(orderId));
                 orders.get(orderId).addPayment(payment);
             }
             allInstances.put(id,payment);

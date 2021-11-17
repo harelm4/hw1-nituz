@@ -12,6 +12,7 @@ public class ImmediatePayment extends Payment {
                 ", paid=" + paid +
                 ", total=" + total +
                 ", details='" + details + '\'' +
+                ", account='"+super.getAccount().getId()+'\'' +
                 '}';
     }
 

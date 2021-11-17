@@ -15,6 +15,7 @@ public class DelayedPayment extends Payment {
                 ", paid=" + paid +
                 ", total=" + total +
                 ", details='" + details + '\'' +
+                ", account='"+super.getAccount().getId()+'\'' +
                 '}';
     }
 }

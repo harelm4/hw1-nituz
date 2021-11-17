@@ -107,6 +107,13 @@ public class Account {
                 customer=null;
                 shoppingCart=null;
 
+                int j=0;
+                for (j=0; j<payments.size(); j++)
+                {
+                        payments.get(j).accountWasDeleted();
+                }
+                payments=null;
+
                 int i=0;
                 for (i=0; i<orders.size(); i++)
                 {
@@ -114,12 +121,7 @@ public class Account {
                 }
                 orders=null;
 
-                int j=0;
-                for (j=0; j<payments.size(); j++)
-                {
-                        payments.get(i).accountWasDeleted();
-                }
-                payments=null;
+
 
         }
 
@@ -128,6 +130,13 @@ public class Account {
                 shoppingCart.delAccount(this);
                 shoppingCart=null;
 
+                int j=0;
+                for (j=0; j<payments.size(); j++)
+                {
+                        payments.get(j).accountWasDeleted();
+                }
+                payments=null;
+
                 int i=0;
                 for (i=0; i<orders.size(); i++)
                 {
@@ -135,12 +144,7 @@ public class Account {
                 }
                 orders=null;
 
-                int j=0;
-                for (j=0; j<payments.size(); j++)
-                {
-                        payments.get(i).accountWasDeleted();
-                }
-                payments=null;
+
 
         }
 

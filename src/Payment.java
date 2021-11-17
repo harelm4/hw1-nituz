@@ -34,12 +34,16 @@ public abstract class Payment {
 
     public void orderWasDeleted() {
         order=null;
+        if (account==null)
+            return;
         account.deletePayment(this);
         account=null;
     }
 
     public void accountWasDeleted(){
         account=null;
+        if (order==null)
+            return;
         order.deletePayment(this);
         order=null;
 
