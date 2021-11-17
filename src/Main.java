@@ -411,13 +411,16 @@ public class Main {
     public static int createNewOrder(String address){
 
         Address addressObj=new Address(address);
-        Order order=new Order(String.valueOf(nextOrderNumber), LocalDateTime.now(),addressObj,OrderStatus.New, userLoggedIn.getCustomer().getAccount());
-        allInstances.put(getSystemId(),order);
-        orders.put(nextOrderNumber,order);
+        int newid=getSystemId();
+        Order order=new Order(String.valueOf(newid), LocalDateTime.now(),addressObj,OrderStatus.New, userLoggedIn.getCustomer().getAccount());
+        allInstances.put(newid,order);
+        orders.put(newid,order);
         //userLoggedIn.getCustomer().getAccount().addOrder(order);
-        nextOrderNumber+=1;
-        return nextOrderNumber-1;
+
+        return newid;
     }
+
+
     //Add product to order *Order_ID* *Login_ID* *Product Name*
 
 
@@ -526,13 +529,19 @@ public class Main {
         ShoppingCart shoppingCart = user.getShoppingCart();
         Customer customer = user.getCustomer();
         Account account = customer.getAccount();
-
-        ArrayList<LineItem> lineItems = shoppingCart.getLineItems();
-        ArrayList<Payment> payments = customer.getAccount().getPayments();
-        for (Payment p : payments)
-        {
-            allInstances.remove(p);
+        for (Payment p:
+                account.getPayments()) {
+            if(allInstances.containsValue(p)){
+                allInstances.remove(Integer.valueOf(p.id));
+            }
         }
+        for (Order o:
+                account.getOrders()) {
+            if(allInstances.containsValue(o)){
+                allInstances.remove(Integer.valueOf(o.getNumber()));
+            }
+        }
+        ArrayList<LineItem> lineItems = shoppingCart.getLineItems();
         user.remove();
         users.remove(user);
         int size = allInstances.size();
@@ -576,7 +585,8 @@ public class Main {
 
             System.out.println(objectId + " does not exist in the system\n");
             return Status.failure;
-        }catch (NumberFormatException e){
+        }
+        catch (NumberFormatException e){
             System.out.println(objectId + " is not a number id in the system\n");
             return Status.failure;
 
@@ -586,8 +596,6 @@ public class Main {
             System.out.println("ERROR EXCEPTION: NOT EXISTING");
             return Status.failure;
         }
-
-
     }
 
     //Add product to order *Order_ID* *Login_ID* *Product Name*
@@ -599,10 +607,8 @@ public class Main {
         Product p = findProductByName(productName);
         if(acc instanceof PremiumAccount){
             //((PremiumAccount) acc).delProduct(findProductByName(productName));
-
             LineItem newLineItem = new LineItem(userLoggedIn.getShoppingCart(), order,p,1,10);
             allInstances.put(getSystemId(),newLineItem);
-
         }
         else{
             return Status.failure;
