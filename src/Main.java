@@ -549,10 +549,17 @@ public class Main {
     }
     private static Status showAllObjects() {
         //printing the memory address of each object
+
         for (Integer name: allInstances.keySet()) {
-            String key = name.toString();
-            String value = allInstances.get(name).toString();
-            System.out.println("ID: "+key + ", value: " + value);
+            try {
+                String key = name.toString();
+                String value = allInstances.get(name).toString();
+                System.out.println("ID: " + key + ", value: " + value);
+            }
+            catch (Exception e)
+            {
+                continue;
+            }
         }
 
         return Status.success;
@@ -573,6 +580,11 @@ public class Main {
             System.out.println(objectId + " is not a number id in the system\n");
             return Status.failure;
 
+        }
+        catch (Exception e)
+        {
+            System.out.println("ERROR EXCEPTION: NOT EXISTING");
+            return Status.failure;
         }
 
 

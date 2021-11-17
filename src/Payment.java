@@ -106,4 +106,11 @@ public abstract class Payment {
         this.order = order;
     }
 
+    public void removeAccount() {
+        this.account=null;
+    }
+
+    public void orderRemoved() {
+        this.order=null;
+    }
 }

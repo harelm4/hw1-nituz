@@ -110,14 +110,14 @@ public class Account {
                 int j=0;
                 for (j=0; j<payments.size(); j++)
                 {
-                        payments.get(j).accountWasDeleted();
+                        payments.get(j).removeAccount();
                 }
                 payments=null;
 
                 int i=0;
                 for (i=0; i<orders.size(); i++)
                 {
-                        orders.get(i).accountWasDeleted();
+                        orders.get(i).removeAccount();
                 }
                 orders=null;
 
