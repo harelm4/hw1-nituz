@@ -188,7 +188,7 @@ public class Main {
                         break;
                     }
 
-                    System.out.println("Please enter User login Id:\n");
+                    System.out.println("Please enter User to buy from Id:\n");
                     String UserID = myObj.nextLine();//fix add user function
                     if (findUser(UserID) == null){
                         System.out.println("User ID doesn't exist!\n");
@@ -234,7 +234,7 @@ public class Main {
                         System.out.println("User should be logged in:\n");
                         break;
                     }
-                    if (userLoggedIn.getCustomer().getAccount() instanceof PremiumAccount) {
+                    if (!(userLoggedIn.getCustomer().getAccount() instanceof PremiumAccount)) {
                         System.out.println("User currently logged in is not a PremiumAccount");
                         break;
                     }
@@ -426,6 +426,10 @@ public class Main {
 
         if(userLoggedIn.getState()==UserState.Closed)
             return Status.failure;
+        if (userLoggedIn.getCustomer().getAccount().getOrders().isEmpty()) {
+            System.out.println("No orders yet");
+            return Status.failure;
+        }
         Order lastOrder=userLoggedIn.getCustomer().getAccount().getOrders().peek();
         System.out.println(
                 "Order Number: "+ lastOrder.getNumber()+"\n"
@@ -483,6 +487,7 @@ public class Main {
         {
             lineItem.productWasDeleted();
         }
+        p.setLineItems(new ArrayList<>());
         p.deleteProduct();
         products.remove(productName);
 
@@ -521,7 +526,13 @@ public class Main {
         ShoppingCart shoppingCart = user.getShoppingCart();
         Customer customer = user.getCustomer();
         Account account = customer.getAccount();
+
         ArrayList<LineItem> lineItems = shoppingCart.getLineItems();
+        ArrayList<Payment> payments = customer.getAccount().getPayments();
+        for (Payment p : payments)
+        {
+            allInstances.remove(p);
+        }
         user.remove();
         users.remove(user);
         int size = allInstances.size();
